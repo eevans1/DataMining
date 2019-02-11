@@ -432,6 +432,7 @@ load(file = "C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets//us
 carrier_codes <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/carrier_codes.csv")
 # carrier_codes <- read.csv("~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/carrier_codes.csv")
 
+library(devtools)
 devtools::install_github("dkahle/ggmap")
 devtools::install_github("hrbrmstr/ggalt")
 devtools::install_github("haleyjeppson/ggmosaic")
@@ -654,6 +655,13 @@ ggplot(data=AvgCarrierDelayMedian, aes(x=AvgCarrierDelayMedian$Carrier, y=AvgCar
        subtitle="Airline Carrier vs Median Delay", 
        caption="source: ABIA") + 
   theme(axis.text.x = element_text(angle=0, vjust=0.6))
+
+ggplot(data = ABIA, aes(x = factor(CarrierName), y = TotalDelay)) + 
+  geom_boxplot(aes(colour = factor(CarrierName))) + ylab("Delay (mins)") + 
+  coord_cartesian(ylim = c(-60, 60)) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 ```
 
 ```{r echo=FALSE}
@@ -706,6 +714,13 @@ ggplot(data=AvgCarrierDelayMedian, aes(x=AvgCarrierDelayMedian$Carrier, y=AvgCar
        subtitle="Airline Carrier vs Median Delay", 
        caption="source: ABIA") + 
   theme(axis.text.x = element_text(angle=0, vjust=0.6))
+
+ggplot(data = ABIA, aes(x = factor(CarrierName), y = TotalDelay)) + 
+  geom_boxplot(aes(colour = factor(CarrierName))) + ylab("Delay (mins)") + 
+  coord_cartesian(ylim = c(-60, 60)) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 ```
 
 Using the attached code, we have derived the average delay for the five airliners that fly to Denver, CO from ABIA, as well as the median delays. The first graph is in increasing order of average delay times, but for the second one we made the decision to maintain the original ordering to promote easier comparisons. The most notable thing discovered by comparing these graphs is that no airliner has a negative mean delay, but four of the five airliners have negative median delays. We attribute this difference to outliers skewing the average. There are a few flights for each airliner that have hugely negative delays, even over 10 hours in a few cases. However, the negative delays, indicating an earlier arrival than anticipated, are never more than around 30 minutes. This made intuitive sense to us, as it is possible to leave an airport an indefinite amount of time after a scheduled departure, but an airplane can't really leave hours before it's scheduled to land, as it would clearly be unjust to expect all of the passengers and crew to be boarded and ready an hour or ten early, meaning that there is somewhat of a ceiling on how early a flight can be, but little to no limit on how late it can be. 
