@@ -1269,14 +1269,6 @@ p_test + geom_path(aes(x = mileage, y = ypred_knn150a), color='red') +
 
 p_test + geom_path(aes(x = mileage, y = ypred_knn200a), color='red') + 
   geom_path(aes(x = mileage, y = ypred_lm265), color='blue')
-
-# Creating a Graph of RMSE as a function of K
-
-dfa <- data.frame(3:221)
-for(i in 3:200){
-  dfa$rmse[i-2] <- rmse(y65_test, knn.reg(train = X65_train, test = X65_test, y = y65_train, k = i)$pred)}
-
-names(dfa) <- c("k", "rmse")
 ```
 
 Here, we have the RMSE plotted as a function of K. RMSE is minimized at K = 40.
@@ -1293,4 +1285,5 @@ Here, we have the optimized value of K plotted against the linear model.
 p_test + geom_path(aes(x = mileage, y = ypred_knn40a), color='red') + 
   geom_path(aes(x = mileage, y = ypred_lm265), color='blue')
 ```
+
 It is worth noting that due to the random selection of test vs. train data points, the optimal K found changed, sometimes drastically, between trials conducted on this data set. However, the optimal K values we found the final time we ran RMSE as a function of K, were 40 for both the S350 and for the S65 AMG. This would likely be explained by the fact that we have roughly 400 observations of the S350 trim, and roughly 300 observations of the S65 AMG trim. The similarity is the size of the data sets would likely mean that again by random chance, we could certainly see optimal k-values for the different data sets being very close to each other.  
