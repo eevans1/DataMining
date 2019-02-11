@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Data visualization 1: green buildings
 
-Placeholder
+Placeholder 1
 
 ## Data visualization 2: flights at ABIA
 
@@ -63,4 +63,4 @@ Using the attached code, we have derived the average delay for the five airliner
 
 ## Regression vs KNN
 
-Placeholder
+Placeholder 2
