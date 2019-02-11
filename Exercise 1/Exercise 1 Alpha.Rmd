@@ -291,7 +291,7 @@ g2 <- ggplot(data = comps_df, aes(x = factor(green_rating), y = Rent)) +
 grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
 ```
 
-```{r echo=FALSE}
+```{r, echo=FALSE, warnings=FALSE}
 ggplot(data = greenbuildings) +
   geom_point(mapping = aes(x = leasing_rate, y = Rent)) +
   xlab("Leasing rate (%)") +
