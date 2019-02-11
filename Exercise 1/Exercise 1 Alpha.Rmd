@@ -12,26 +12,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Data visualization 1: green buildings
 
-``` {r include=FALSE}
-Green.Buildings <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/Green Buildings.csv")
+``` {r echo=FALSE}
+greenbuildings <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/Green Buildings.csv")
 # greenbuildings <- read.csv("~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/greenbuildings.csv")
 
 # Libraries
-install.packages("ggplot2")
 library(ggplot2)
-install.packages("ggalt")
 library(ggalt)
-install.packages("gifski")
 library(gifski)
-install.packages("gganimate")
 library(gganimate)
-install.packages("gapminder")
 library(gapminder)
-install.packages("grid")
 library(grid)
-install.packages("gridExtra")
 library(gridExtra)
-install.packages("plyr")
 library(plyr)
 
 
@@ -72,8 +64,8 @@ colnames(med_val_lr) <- c("green_rating", "leasing_rate")
 g1 <- ggplot(data = gb_cut, aes(x = factor(green_rating), y = leasing_rate)) + 
   geom_boxplot(aes(colour = factor(green_rating))) + ylab("Leasing rate (%)") +
   scale_colour_manual(name = "",
-                    guide = FALSE,
-                    values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank()) + 
@@ -129,8 +121,8 @@ g_shaped <- ggplot(data = gb_cut) +
                       labels = c("Older", "Newer"),
                       values = c("0" = 1,"1" = 19)) +
   scale_colour_manual( name = "",
-                     labels = c("Non-Green", "Green"),
-                     values = c("0" = "#5a5a5a", "1" = "#4daf4d")) + 
+                       labels = c("Non-Green", "Green"),
+                       values = c("0" = "#5a5a5a", "1" = "#4daf4d")) + 
   xlab("Leasing rate (%)") +
   ylab("Rent ($/sqft)")
 # It is difficult to make out everything so we will cycle through the different states
@@ -258,8 +250,8 @@ ggplot(data = gb_cut) +
   ylab("Rent ($/sqft)") +
   geom_polygon(data = datapoly, aes(x=x, y=y, fill = factor(value), group = id), alpha = 0.6) +
   scale_fill_manual( name = "",
-                      labels = c("Non-Green", "Green"),
-                      values = c("0" = 1,"1" = 19))
+                     labels = c("Non-Green", "Green"),
+                     values = c("0" = 1,"1" = 19))
 
 # Here we see that the interquartile range for the green within the iqr of the non-green
 # For our comps the decision to go green is less clear than before
@@ -343,7 +335,7 @@ Using the attached code, we have derived the average delay for the five airliner
 
 ## Regression vs KNN
 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 sclass <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/sclass.csv")
 sclass350 = subset(sclass, trim == '350')
 sclass65AMG = subset(sclass, trim == '65 AMG')
@@ -532,5 +524,69 @@ rmse(y350_test, ypred_knn40)
 p_test + geom_path(aes(x = mileage, y = ypred_knn40), color='red')
 p_test + geom_path(aes(x = mileage, y = ypred_knn40), color='red') + 
   geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+```
 
+```{r, echo=FALSE}
+p_test = ggplot(data = D350_test) + 
+  geom_point(mapping = aes(x = mileage, y = price), color='lightgrey') + 
+  theme_bw(base_size=18) + 
+  ylim(0, 250000)
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn3), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn3), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn4), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn4), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn5), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn5), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn10), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn10), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn25), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn25), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn50), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn50), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn75), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn75), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn100), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn100), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn150), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn150), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn200), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn200), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn250), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn250), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+```
+
+```{r, echo=FALSE, warning=FALSE}
+# Creating a Graph of RMSE as a function of K
+ggplot(data = df) + 
+  geom_point(mapping = aes(x = k, y = rmse), color='darkgrey') + 
+  ylim(0, 20000)
+```
+
+```{r, echo=FALSE}
+p_test + geom_path(aes(x = mileage, y = ypred_knn40), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn40), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
 ```
