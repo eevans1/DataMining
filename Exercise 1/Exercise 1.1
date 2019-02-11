@@ -27,7 +27,6 @@ DenFlights <- subset(ABIA, ABIA$Dest=="DEN") # subsetting the data, only care ab
 
 #Plotting by Mean
 AvgCarrierDelay <- aggregate(DenFlights$TotalDelay ~ DenFlights$UniqueCarrier, data=DenFlights, mean) # finding mean by carrier
-AvgCarrierDelay # seeing what it looks like
 colnames(AvgCarrierDelay) <- c("Carrier", "Avg Delay") # renaming the columns
 AvgCarrierDelay <- AvgCarrierDelay[order(AvgCarrierDelay$`Avg Delay`), ]  # sort
 AvgCarrierDelay$Carrier <- factor(AvgCarrierDelay$Carrier, levels = AvgCarrierDelay$Carrier)  # to retain the order in plot
