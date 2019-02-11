@@ -1,0 +1,29 @@
+---
+title: "Exercise 1"
+output: github_document
+author:
+- Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
+date: "`r format(Sys.time(), '%d %B %Y')`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data visualization 1: green buildings
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Data visualization 2: flights at ABIA
+
+Words 1
+
+You can also embed plots, for example:
+
+```{r pressure}
+plot(pressure)
+```
