@@ -62,7 +62,9 @@ The graph below shows the average delay by airline for each day of the week. Ave
 
 ![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
-Here is a box plot showing the delay by airline carrier. Comair and Atlantic Southeast Airlines appear to have the highest delays. ![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-16-1.png)
+Here is a box plot showing the delay by airline carrier. Comair and Atlantic Southeast Airlines appear to have the highest delays.
+
+![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
 Here, we focused our analysis on a specific route. We chose Austin to Denver. ![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-17-1.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-17-2.png)
 

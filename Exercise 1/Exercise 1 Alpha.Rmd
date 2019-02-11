@@ -764,6 +764,7 @@ ggplot(airline_week, aes(x=DayOfWeek)) +
 ```
 
 Here is a box plot showing the delay by airline carrier. Comair and Atlantic Southeast Airlines appear to have the highest delays.
+
 ```{r echo=FALSE, warning=FALSE}
 ggplot(data = ABIA, aes(x = factor(CarrierName), y = TotalDelay)) + 
   geom_boxplot(aes(colour = factor(CarrierName))) + ylab("Delay (mins)") + 
