@@ -83,13 +83,10 @@ Here, we have the optimized value of K plotted against the linear model. ![](Exe
 
 The analysis now repeated with the 65 AMG, with K values 3, 4, 5, 10, 25, 50, 75, 100, 150, and 200. This is plotted in red against the linear regression in blue.
 
-![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-1.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-2.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-3.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-4.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-5.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-6.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-7.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-8.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-9.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-10.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-11.png)
+![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-1.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-2.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-3.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-4.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-5.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-6.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-7.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-8.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-9.png)![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-23-10.png)
 
-Here, we have the RMSE plotted as a function of K.
+Here, we have the RMSE plotted as a function of K. RMSE is minimized at K = 40.
 
-    ## [1] "call"      "k"         "n"         "pred"      "residuals" "PRESS"    
-    ## [7] "R2Pred"
-
-    ## [1] 17372.4
+![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-24-1.png)
 
 Here, we have the optimized value of K plotted against the linear model. ![](Exercise_1_Alpha_files/figure-markdown_github/unnamed-chunk-25-1.png) It is worth noting that due to the random selection of test vs. train data points, the optimal K found changed, sometimes drastically, between trials conducted on this data set. However, the optimal K values we found the final time we ran RMSE as a function of K, were 40 for both the S350 and for the S65 AMG. This would likely be explained by the fact that we have roughly 400 observations of the S350 trim, and roughly 300 observations of the S65 AMG trim. The similarity is the size of the data sets would likely mean that again by random chance, we could certainly see optimal k-values for the different data sets being very close to each other.

@@ -1277,21 +1277,16 @@ for(i in 3:200){
   dfa$rmse[i-2] <- rmse(y65_test, knn.reg(train = X65_train, test = X65_test, y = y65_train, k = i)$pred)}
 
 names(dfa) <- c("k", "rmse")
+```
 
+Here, we have the RMSE plotted as a function of K. RMSE is minimized at K = 40.
+
+```{r echo=FALSE}
 ggplot(data = dfa) + 
   geom_point(mapping = aes(x = k, y = rmse), color='darkgrey') + 
   ylim(0, 75000)
 ```
 
-Here, we have the RMSE plotted as a function of K.
-```{r echo=FALSE}
-# RMSE is minimized at k=40, verifying RMSE from the df computations, and creating a fitted model
-knn40a = knn.reg(train = X65_train, test = X65_test, y = y65_train, k=40)
-names(knn40a)
-
-ypred_knn40a = knn40a$pred
-rmse(y65_test, ypred_knn40a)
-```
 
 Here, we have the optimized value of K plotted against the linear model.
 ```{r echo=FALSE}
