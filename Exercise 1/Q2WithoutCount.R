@@ -1,6 +1,5 @@
 library(ggplot2)
 library(tidyverse)
-library(plyr)
 
 #Creating a Subset
 ABIA$TotalDelay <- ABIA$DepDelay + ABIA$ArrDelay # defining an important variable
