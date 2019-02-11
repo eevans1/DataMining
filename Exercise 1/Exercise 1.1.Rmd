@@ -16,7 +16,7 @@ Placeholder 1
 
 ## Data visualization 2: flights at ABIA
 
-```{r, echo=FALSE}
+```{r, include=FALSE}
 ABIA <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/ABIA.csv")
 
 #Creating a Subset

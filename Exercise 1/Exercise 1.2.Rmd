@@ -12,7 +12,293 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Data visualization 1: green buildings
 
-Placeholder 1
+``` {r include=FALSE}
+Green.Buildings <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/Green Buildings.csv")
+# greenbuildings <- read.csv("~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/greenbuildings.csv")
+
+# Libraries
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("ggalt")
+library(ggalt)
+install.packages("gifski")
+library(gifski)
+install.packages("gganimate")
+library(gganimate)
+install.packages("gapminder")
+library(gapminder)
+install.packages("grid")
+library(grid)
+install.packages("gridExtra")
+library(gridExtra)
+install.packages("plyr")
+library(plyr)
+
+
+# Ultimately what one the two positive outcomes that a developer is looking for is (a) rent and (b) leasing rate
+# We simply plot our data on these two axis to get an idea of how the data set is distributed
+ggplot(data = greenbuildings) +
+  geom_point(mapping = aes(x = leasing_rate, y = Rent)) +
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)")
+
+# Our data contains a few outliers of extremely high rent and very low leasing rate
+# We have no reason to believe that our building will fall into these two categories
+# We will concern outselves with the bulk of the data that has an above 50% occupancy rate and a rend below 100 $/sqft
+# This restriction will still leave the vast majority of the data
+gb_cut = subset(greenbuildings, Rent <=100 & leasing_rate >=50)
+# Represented below is the new distribution 
+ggplot(data = gb_cut) +
+  geom_point(mapping = aes(x = leasing_rate, y = Rent)) +
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)")
+
+
+# Our builder is concerned with the decision of "going green" 
+# To illustrate this in our data we colour the apartments that have green certifications
+# Color code
+ggplot(data = gb_cut) +
+  geom_point(aes(x = leasing_rate, y = Rent, colour = factor(green_rating)))+
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)") +
+  scale_colour_manual( name = "Green Certification",
+                       labels = c("No", "Yes"),
+                       values = c("0" = "#5a5a5a", "1" = "#4daf4d"))
+
+# We note here that the buildings with green certifications appear to have slightly higher leasing rates
+# Furthermore, there appears to be a larger clump of low-rent buildings without green certificaions 
+med_val_lr <- ddply(gb_cut, .(green_rating), summarise, med = median(leasing_rate))
+colnames(med_val_lr) <- c("green_rating", "leasing_rate")
+g1 <- ggplot(data = gb_cut, aes(x = factor(green_rating), y = leasing_rate)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Leasing rate (%)") +
+  scale_colour_manual(name = "",
+                    guide = FALSE,
+                    values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_lr, aes(x = factor(green_rating), y = leasing_rate, label = leasing_rate), 
+            size = 3, vjust = -1)
+med_val_r <- ddply(gb_cut, .(green_rating), summarise, med = median(Rent))
+colnames(med_val_r) <- c("green_rating", "Rent")
+g2 <- ggplot(data = gb_cut, aes(x = factor(green_rating), y = Rent)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Rent ($/sqft)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_r, aes(x = factor(green_rating), y = Rent, label = Rent), 
+            size = 3, vjust = -1)
+grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
+
+# We can see that both the leasing rate and the rent are higher for green buildings
+
+# An interesting theory might be that green buildings typically correspond to newer developments 
+# And newer developments might correspond to nicer buildings and therefore higher rents and leasing rates
+
+
+#  Here we define an arbitrary cuttoff between "old" and "new" buildings
+age_cutoff = 20
+greenbuildings$new = ifelse(greenbuildings$age <= age_cutoff, 1, 0)
+# We will also now categorize whether the building is new and whether its is green into four groups
+
+# Define categories
+cat_nongreen_nonnew = greenbuildings$green_rating == 0 & greenbuildings$new == 0
+cat_nongreen_new = greenbuildings$green_rating == 0 & greenbuildings$new == 1
+cat_green_nonnew = greenbuildings$green_rating == 1 & greenbuildings$new == 0
+cat_green_new = greenbuildings$green_rating == 1 & greenbuildings$new == 1
+
+# Create categorical variable denoting the category
+greenbuildings$cat = ifelse(cat_nongreen_nonnew, "ngnn", 
+                            ifelse(cat_nongreen_new, "ngn", 
+                                   ifelse(cat_green_nonnew, "gnn", 
+                                          ifelse(cat_green_new, "gn", 0))))
+gb_cut = subset(greenbuildings, Rent <=100 & leasing_rate >=50)
+
+
+# This new plot now considers whether a building is relatively new
+# If the point is filled in then it represents a newer development
+g_shaped <- ggplot(data = gb_cut) +
+  geom_point(aes(x = leasing_rate, 
+                 y = Rent, 
+                 colour = factor(green_rating),
+                 shape = factor(new))) +
+  scale_shape_manual( name = "",
+                      labels = c("Older", "Newer"),
+                      values = c("0" = 1,"1" = 19)) +
+  scale_colour_manual( name = "",
+                     labels = c("Non-Green", "Green"),
+                     values = c("0" = "#5a5a5a", "1" = "#4daf4d")) + 
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)")
+# It is difficult to make out everything so we will cycle through the different states
+ani_cat <- animate(g_shaped + transition_manual(cat), renderer = gifski_renderer(), width = 1500, height = 1000, res = 100)
+ani_cat
+
+# Here it looks like by simply controlling for newer developments,
+# we have removed many of the low occupancy buildings from the non-green apartments
+
+# We can now look at the box and whiskers just for the new buildings and the gap has considerably shrunk
+med_val_lr <- ddply(subset(gb_cut, new == 1), .(green_rating), summarise, med = median(leasing_rate))
+colnames(med_val_lr) <- c("green_rating", "leasing_rate")
+g1 <- ggplot(data = subset(gb_cut, new == 1), aes(x = factor(green_rating), y = leasing_rate)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Leasing rate (%)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_lr, aes(x = factor(green_rating), y = leasing_rate, label = leasing_rate), 
+            size = 3, vjust = -1)
+med_val_r <- ddply(subset(gb_cut, new == 1), .(green_rating), summarise, med = median(Rent))
+colnames(med_val_r) <- c("green_rating", "Rent")
+g2 <- ggplot(data = subset(gb_cut, new == 1), aes(x = factor(green_rating), y = Rent)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Rent ($/sqft)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_r, aes(x = factor(green_rating), y = Rent, label = Rent), 
+            size = 3, vjust = -1)
+grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
+
+# To finalize this study we can control for a few more variables that the situation discribes
+# The developer describes the building that is 
+# - 15 stories
+# - Mixed use
+# - Is located on East Cesar Chavez
+##  - One can find online sources for the approximate rent of an East Cesar Chavez apartment.
+##    Esitmates are approximately $27/sqft      
+# - Is a new construction
+
+# With these qualifications we can find apartments in our data set that could be considered roughly comprable  
+comp_loose <- 
+  greenbuildings$Rent>=20 & greenbuildings$Rent<=35 & 
+  greenbuildings$stories>=5 & greenbuildings$stories <= 25 & 
+  greenbuildings$age<15 & greenbuildings$amenities==1
+
+# We now indicate those buildings that fall under this qualification
+greenbuildings$comps <- ifelse(comp_loose, "loose", ".")
+
+# Idealy we would like to see where this range of building factors are located on our data set
+
+# Here we will construct a polygon sized to the interquartile of the leasing rent and Rent
+# First a rudimentary data structure to store our values
+# 1st dim: non green, green
+# 2nd dim: 25th quartile, 75 quartile
+# 3rd dim: leasing rate, rent
+matrix <- array(0, dim=c(2, 2, 2))
+# Create a new data frame representing our comps
+comps_df = subset(greenbuildings, comps == "loose")
+# This now se separate into green and non green
+gdf <- subset(comps_df, green_rating ==1)
+ngdf <- subset(comps_df, green_rating ==0)
+
+### Non Green 
+## Leasing Rate
+# 25th Quantile
+matrix[1,1,1] <- quantile(ngdf$leasing_rate, .25)
+# 75th Quantile
+matrix[1,2,1] <- quantile(ngdf$leasing_rate, .75)
+
+## Rent
+# 25th Quantile
+matrix[1,1,2] <- quantile(ngdf$Rent, .25)
+# 75th Quantile
+matrix[1,2,2] <- quantile(ngdf$Rent, .75)
+
+### Green 
+## Leasting Rate
+# 25th Quantile
+matrix[2,1,1] <- quantile(gdf$leasing_rate, .25)
+# 75th Quantile
+matrix[2,2,1] <- quantile(gdf$leasing_rate, .75)
+
+## Rent
+# 25th Quantile
+matrix[2,1,2] <- quantile(gdf$Rent, .25)
+# 75th Quantile
+matrix[2,2,2] <- quantile(gdf$Rent, .75)
+
+# Here we create our polygon vertices
+ids <- factor(c(0,1))
+
+values <- data.frame(
+  id = ids,
+  value = c(0, 1)
+)
+
+
+positions <- data.frame(
+  id = rep(ids, each = 4),
+  x = c(matrix[1,1,1], matrix[1,2,1], matrix[1,2,1], matrix[1,1,1], matrix[2,1,1], matrix[2,2,1], matrix[2,2,1], matrix[2,1,1]),
+  y = c(matrix[1,1,2], matrix[1,1,2], matrix[1,2,2], matrix[1,2,2], matrix[2,1,2], matrix[2,1,2], matrix[2,2,2], matrix[2,2,2])
+)
+
+datapoly <- merge(values, positions, by = c("id"))
+
+# Now we overlay our quantile polygon on our previous data
+ggplot(data = gb_cut) +
+  geom_point(aes(x = leasing_rate, 
+                 y = Rent, 
+                 colour = factor(green_rating),
+                 shape = factor(new))) +
+  scale_shape_manual( name = "",
+                      labels = c("Older", "Newer"),
+                      values = c("0" = 1,"1" = 19)) +
+  scale_colour_manual( name = "",
+                       labels = c("Non-Green", "Green"),
+                       values = c("0" = "#5a5a5a", "1" = "#4daf4d")) + 
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)") +
+  geom_polygon(data = datapoly, aes(x=x, y=y, fill = factor(value), group = id), alpha = 0.6) +
+  scale_fill_manual( name = "",
+                      labels = c("Non-Green", "Green"),
+                      values = c("0" = 1,"1" = 19))
+
+# Here we see that the interquartile range for the green within the iqr of the non-green
+# For our comps the decision to go green is less clear than before
+# It appears that from our data not upgrading would be an acceptable option
+# The green buildings tend to have very slight higher median leasing rates and slightly higher median rents; 
+# however, it is far from conclusive. 
+# It is important to note that the 75th quantile of the non-green does extend higher in both dimensions than the green
+# It may be more worth while for the developer to spend money that could have gone into green appliances
+# And instead invest in more luxirous dwellings that prompt higher rents and leasing rates
+# More data is needed to more accurately represent the dwelling that
+# the developer wants to build.
+
+# Data is now shown in a box plot
+med_val_lr <- ddply(comps_df, .(green_rating), summarise, med = median(leasing_rate))
+colnames(med_val_lr) <- c("green_rating", "leasing_rate")
+g1 <- ggplot(data = comps_df, aes(x = factor(green_rating), y = leasing_rate)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Leasing rate (%)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_lr, aes(x = factor(green_rating), y = leasing_rate, label = leasing_rate), 
+            size = 3, vjust = 1.2)
+med_val_r <- ddply(comps_df, .(green_rating), summarise, med = median(Rent))
+colnames(med_val_r) <- c("green_rating", "Rent")
+g2 <- ggplot(data = comps_df, aes(x = factor(green_rating), y = Rent)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Rent ($/sqft)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_r, aes(x = factor(green_rating), y = Rent, label = Rent), 
+            size = 3, vjust = -1)
+grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
+```
 
 ## Data visualization 2: flights at ABIA
 
@@ -57,4 +343,194 @@ Using the attached code, we have derived the average delay for the five airliner
 
 ## Regression vs KNN
 
-Placeholder 2
+```{r, echo=FALSE}
+sclass <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/sclass.csv")
+sclass350 = subset(sclass, trim == '350')
+sclass65AMG = subset(sclass, trim == '65 AMG')
+library(tidyverse)
+library(FNN)
+library(mosaic)
+N350 = nrow(sclass350)
+N350_train = floor(0.8*N350)
+N350_test = N350 - N350_train
+
+# randomly sample a set of data points to include in the training set
+
+train350_ind = sample.int(N350, N350_train, replace=FALSE)
+
+# Define the training and testing set
+
+D350_train = sclass350[train350_ind,]
+D350_test = sclass350[-train350_ind,]
+
+D350_test = arrange(D350_test, mileage)
+head(D350_test)
+
+# Now separate the training and testing sets into features (X) and outcome (y)
+X350_train = select(D350_train, mileage)
+y350_train = select(D350_train, price)
+X350_test = select(D350_test, mileage)
+y350_test = select(D350_test, price)
+
+# linear and quadratic models and rmse
+
+lm1 = lm(price ~ mileage, data=D350_train)
+lm2 = lm(price ~ poly(mileage, 2), data=D350_train)
+
+rmse = function(y, ypred) {
+  sqrt(mean(data.matrix((y-ypred)^2)))
+}
+
+ypred_lm1 = predict(lm1, X350_test)
+ypred_lm2 = predict(lm2, X350_test)
+
+rmse(y350_test, ypred_lm1)
+rmse(y350_test, ypred_lm2)
+
+# creating k= models and fitting them
+
+knn3 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=3)
+names(knn3)
+
+ypred_knn3 = knn3$pred
+rmse(y350_test, ypred_knn3)
+
+knn4 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=4)
+names(knn4)
+
+ypred_knn4 = knn4$pred
+rmse(y350_test, ypred_knn4)
+
+knn5 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=5)
+names(knn5)
+
+ypred_knn5 = knn5$pred
+rmse(y350_test, ypred_knn5)
+
+knn10 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=10)
+names(knn10)
+
+ypred_knn10 = knn10$pred
+rmse(y350_test, ypred_knn10)
+
+knn25 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=25)
+names(knn25)
+
+ypred_knn25 = knn25$pred
+rmse(y350_test, ypred_knn25)
+
+knn50 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=50)
+names(knn50)
+
+ypred_knn50 = knn50$pred
+rmse(y350_test, ypred_knn50)
+
+knn75 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=75)
+names(knn75)
+
+ypred_knn75 = knn75$pred
+rmse(y350_test, ypred_knn75)
+
+knn100 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=100)
+names(knn100)
+
+ypred_knn100 = knn100$pred
+rmse(y350_test, ypred_knn100)
+
+knn150 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=150)
+names(knn150)
+
+ypred_knn150 = knn150$pred
+rmse(y350_test, ypred_knn150)
+
+knn200 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=200)
+names(knn200)
+
+ypred_knn200 = knn200$pred
+rmse(y350_test, ypred_knn200)
+
+knn250 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=250)
+names(knn250)
+
+ypred_knn250 = knn250$pred
+rmse(y350_test, ypred_knn250)
+
+# graphing
+
+p_test = ggplot(data = D350_test) + 
+  geom_point(mapping = aes(x = mileage, y = price), color='lightgrey') + 
+  theme_bw(base_size=18) + 
+  ylim(0, 250000)
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn3), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn3), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn4), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn4), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn5), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn5), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn10), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn10), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn25), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn25), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn50), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn50), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn75), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn75), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn100), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn100), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn150), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn150), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn200), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn200), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn250), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn250), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+# Creating a Graph of RMSE as a function of K
+
+df <- data.frame(3:320)
+for(i in 3:300){
+  df$rmse[i-2] <- rmse(y350_test, knn.reg(train = X350_train, test = X350_test, y = y350_train, k = i)$pred)}
+view(df)
+names(df) <- c("k", "rmse")
+
+ggplot(data = df) + 
+  geom_point(mapping = aes(x = k, y = rmse), color='darkgrey') + 
+  ylim(0, 20000)
+
+
+# RMSE is minimized at k=40, verifying RMSE from the df computations, and creating a fitted model, but 
+# it should be noted that this changes every time the program is run due to randomness
+# the same holds for the 65AMG data
+knn40 = knn.reg(train = X350_train, test = X350_test, y = y350_train, k=40)
+names(knn40)
+
+ypred_knn40 = knn40$pred
+rmse(y350_test, ypred_knn40)
+
+p_test + geom_path(aes(x = mileage, y = ypred_knn40), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn40), color='red') + 
+  geom_path(aes(x = mileage, y = ypred_lm2), color='blue')
+
+```
