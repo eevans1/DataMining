@@ -1,7 +1,8 @@
 Exercise 1
 ================
-Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
 11 February 2019
+
+Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
 
 Data visualization 1: green buildings
 -------------------------------------

@@ -1,10 +1,9 @@
 ---
 title: "Exercise 1"
 output: github_document
-author:
-- Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
 date: "`r format(Sys.time(), '%d %B %Y')`"
 ---
+Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
 
 ```{r setup, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
