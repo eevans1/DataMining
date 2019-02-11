@@ -168,14 +168,14 @@ ggplot(data = dfa) +
 
 view(dfa)
 
-# RMSE is minimized at k=5, verifying RMSE from the df computations, and creating a fitted model
-knn5a = knn.reg(train = X65_train, test = X65_test, y = y65_train, k=5)
-names(knn5a)
+# RMSE is minimized at k=40, verifying RMSE from the df computations, and creating a fitted model
+knn40a = knn.reg(train = X65_train, test = X65_test, y = y65_train, k=40)
+names(knn40a)
 
-ypred_knn5a = knn5a$pred
-rmse(y65_test, ypred_knn5a)
+ypred_knn40a = knn40a$pred
+rmse(y65_test, ypred_knn40a)
 
-p_test + geom_path(aes(x = mileage, y = ypred_knn5a), color='red')
-p_test + geom_path(aes(x = mileage, y = ypred_knn5a), color='red') + 
+p_test + geom_path(aes(x = mileage, y = ypred_knn40a), color='red')
+p_test + geom_path(aes(x = mileage, y = ypred_knn40a), color='red') + 
   geom_path(aes(x = mileage, y = ypred_lm265), color='blue')
 
