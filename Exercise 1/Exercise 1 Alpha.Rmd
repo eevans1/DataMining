@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Data visualization 1: green buildings
 
-``` {r echo=FALSE}
+``` {r include=FALSE}
 greenbuildings <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/Green Buildings.csv")
 # greenbuildings <- read.csv("~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/greenbuildings.csv")
 
@@ -291,10 +291,336 @@ g2 <- ggplot(data = comps_df, aes(x = factor(green_rating), y = Rent)) +
 grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
 ```
 
+```{r echo=FALSE}
+ggplot(data = greenbuildings) +
+  geom_point(mapping = aes(x = leasing_rate, y = Rent)) +
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)")
+
+ggplot(data = gb_cut) +
+  geom_point(mapping = aes(x = leasing_rate, y = Rent)) +
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)")
+
+ggplot(data = gb_cut) +
+  geom_point(aes(x = leasing_rate, y = Rent, colour = factor(green_rating)))+
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)") +
+  scale_colour_manual( name = "Green Certification",
+                       labels = c("No", "Yes"),
+                       values = c("0" = "#5a5a5a", "1" = "#4daf4d"))
+
+g1 <- ggplot(data = gb_cut, aes(x = factor(green_rating), y = leasing_rate)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Leasing rate (%)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_lr, aes(x = factor(green_rating), y = leasing_rate, label = leasing_rate), 
+            size = 3, vjust = -1)
+
+g2 <- ggplot(data = gb_cut, aes(x = factor(green_rating), y = Rent)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Rent ($/sqft)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_r, aes(x = factor(green_rating), y = Rent, label = Rent), 
+            size = 3, vjust = -1)
+grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
+
+g_shaped <- ggplot(data = gb_cut) +
+  geom_point(aes(x = leasing_rate, 
+                 y = Rent, 
+                 colour = factor(green_rating),
+                 shape = factor(new))) +
+  scale_shape_manual( name = "",
+                      labels = c("Older", "Newer"),
+                      values = c("0" = 1,"1" = 19)) +
+  scale_colour_manual( name = "",
+                       labels = c("Non-Green", "Green"),
+                       values = c("0" = "#5a5a5a", "1" = "#4daf4d")) + 
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)")
+
+ani_cat <- animate(g_shaped + transition_manual(cat), renderer = gifski_renderer(), width = 1500, height = 1000, res = 100)
+ani_cat
+
+g1 <- ggplot(data = subset(gb_cut, new == 1), aes(x = factor(green_rating), y = leasing_rate)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Leasing rate (%)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_lr, aes(x = factor(green_rating), y = leasing_rate, label = leasing_rate), 
+            size = 3, vjust = -1)
+
+g2 <- ggplot(data = subset(gb_cut, new == 1), aes(x = factor(green_rating), y = Rent)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Rent ($/sqft)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_r, aes(x = factor(green_rating), y = Rent, label = Rent), 
+            size = 3, vjust = -1)
+grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
+
+ggplot(data = gb_cut) +
+  geom_point(aes(x = leasing_rate, 
+                 y = Rent, 
+                 colour = factor(green_rating),
+                 shape = factor(new))) +
+  scale_shape_manual( name = "",
+                      labels = c("Older", "Newer"),
+                      values = c("0" = 1,"1" = 19)) +
+  scale_colour_manual( name = "",
+                       labels = c("Non-Green", "Green"),
+                       values = c("0" = "#5a5a5a", "1" = "#4daf4d")) + 
+  xlab("Leasing rate (%)") +
+  ylab("Rent ($/sqft)") +
+  geom_polygon(data = datapoly, aes(x=x, y=y, fill = factor(value), group = id), alpha = 0.6) +
+  scale_fill_manual( name = "",
+                     labels = c("Non-Green", "Green"),
+                     values = c("0" = 1,"1" = 19))
+
+g1 <- ggplot(data = comps_df, aes(x = factor(green_rating), y = leasing_rate)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Leasing rate (%)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_lr, aes(x = factor(green_rating), y = leasing_rate, label = leasing_rate), 
+            size = 3, vjust = 1.2)
+
+g2 <- ggplot(data = comps_df, aes(x = factor(green_rating), y = Rent)) + 
+  geom_boxplot(aes(colour = factor(green_rating))) + ylab("Rent ($/sqft)") +
+  scale_colour_manual(name = "",
+                      guide = FALSE,
+                      values = c("0" = "#5a5a5a","1" = "#4daf4d")) + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) + 
+  geom_text(data = med_val_r, aes(x = factor(green_rating), y = Rent, label = Rent), 
+            size = 3, vjust = -1)
+grid.arrange(g1,g2,nrow=2, padding = unit(0, "line"))
+```
+
 ## Data visualization 2: flights at ABIA
 
-```{r, echo=FALSE}
+```{r include=FALSE}
 ABIA <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/ABIA.csv")
+
+# Load a data frame 
+airport_df <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets//airport_df.csv")
+# airport_df <- read.csv("~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/airport_df.csv")
+
+# Loading a previously created usa_map
+# load(file = "~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/usa_map.RData")
+load(file = "C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets//usa_map.RData")
+
+# Carrier codes
+carrier_codes <- read.csv("C:/Users/small/OneDrive/Spring 2019/Data Mining Local/Data Sets/carrier_codes.csv")
+# carrier_codes <- read.csv("~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/carrier_codes.csv")
+
+devtools::install_github("dkahle/ggmap")
+devtools::install_github("hrbrmstr/ggalt")
+devtools::install_github("haleyjeppson/ggmosaic")
+devtools::install_github("tidyverse/ggplot2")
+devtools::install_github('thomasp85/gganimate')
+library(tidyverse)
+library(ggplot2)
+library(ggmap)
+library(ggalt)
+library(gganimate)
+library(gapminder)
+library(gifski)
+library(magick)
+library(stringr)
+library(dplyr)
+library(ggTimeSeries)
+library(lubridate)
+
+# Create date variable
+ABIA$DoY <- as.Date(
+  paste(ABIA$Year, "-",
+        ABIA$Month,"-",
+        ABIA$DayofMonth, sep = ""), "%Y-%m-%d")
+# Get Day of Year 
+ABIA$DayOfYear <- as.POSIXlt(ABIA$DoY,format="%Y-%m-%d")$yday
+
+
+
+##### DO NOT RUN ##### Objects already saved ######################################################
+#
+# Get lat and longitude for all airports in data set
+# 
+# airport <- unique(append(as.vector(ABIA$Origin),as.vector(ABIA$Dest)))
+# airport_df <- data.frame(airport)
+# 
+# for (i in 1:nrow(airport_df)){
+#   gc = geocode(paste(toString(airport_df$airport[i]), "Airport", sep = " "))
+#   airport_df$lat[i] = gc[1,2]
+#   airport_df$long[i] = gc[1,1]
+# }
+# 
+# save(airport_df, file = "C:/Users/suber/iCloudDrive/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/airport_df.Rda")
+# df <- apply(airport_df,2,as.character)
+# write.csv(df, file = "C:/Users/suber/iCloudDrive/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/airport_df.csv")
+# 
+# The usa map
+# usa_map <- get_map(location='united states', zoom=4, maptype = "roadmap", source = 'google')
+# save(usa_map, file = "~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/usa_map.RData")
+#
+##################################################################################################
+
+
+#Cut observations with AUS as the destination for the purpose of the map. 
+#Can be changed to == if want map with all flights going into AUS
+
+
+ABIA$Olat <- airport_df$lat[match(unlist(ABIA$Origin), airport_df$airport)]
+ABIA$Olong <- airport_df$long[match(unlist(ABIA$Origin), airport_df$airport)]
+ABIA$Dlat <- airport_df$lat[match(unlist(ABIA$Dest), airport_df$airport)]
+ABIA$Dlong <- airport_df$long[match(unlist(ABIA$Dest), airport_df$airport)]
+
+ABIA$CarrierName <- carrier_codes$Carrier.Name[match(unlist(ABIA$UniqueCarrier), carrier_codes$IATA.Carrier.Code)]
+
+ABIA_cut = subset(ABIA, Dest != "AUS")
+
+ABIA_cut$row <- seq.int(nrow(ABIA_cut))
+
+# The usa
+# usa_map <- get_map(location='united states', zoom=4, maptype = "roadmap", source = 'google')
+# save(usa_map, file = "~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/usa_map.RData")
+
+
+
+g <- ggmap(usa_map, data = ABIA_cut) +
+  geom_segment(aes(x=Olong, y=Olat, xend = Dlong, yend=Dlat, colour = CarrierName), 
+               data = ABIA_cut, size=0.1, arrow=arrow( length = unit(0.1, "inches"))) + 
+  ylab("Latitude") + xlab("Longitude") +
+  geom_count(aes(x=Dlong, y=Dlat, colour = CarrierName), data=ABIA_cut, alpha = 0.5) +
+  labs( colour="", size="Number of Flights")
+
+### Creates the gif
+## Airline departures by month
+ani_month <- animate(g + transition_manual(Month), renderer = gifski_renderer(), width = 1500, height = 1000, res = 100)
+## By Day of Week
+# ani_dow <- animate(g + transition_manual(DayOfWeek), renderer = gifski_renderer(), width = 1500, height = 1000, res = 100)
+## By Day of Year
+# ani_doy <- animate(g + transition_manual(DayOfYear), renderer = gifski_renderer(), width = 1500, height = 1000)
+
+# If you want to save the .gif
+# save_gif(ani_month, gif_file = "C:/Users/suber/iCloudDrive/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/airplane.gif", width = 1500, height = 100, res = 1000, loop = TRUE)
+# save_gif(ani_month, gif_file = "~/Documents/UT Austin/2019 Spring/DataScience/Homework/Excercise 1/airplane.gif", loop = TRUE)
+
+# Call to get gif
+ani_month
+# ani_dow
+# ani_doy
+
+########## Heat map
+## Need day of year var
+
+
+# Remove NA dep or arr delays
+ABIA <- ABIA[complete.cases(ABIA[, 16:17]),]
+
+# Create a total delay metric
+ABIA$TotalDelay = ABIA$ArrDelay + ABIA$DepDelay
+ABIA$WeekOfMonth <- ceiling(ABIA$DayofMonth/7)
+
+# Dont need
+# delay <- as.vector(ABIA$DoY)
+# delay_df <- data.frame(unique(ABIA$DoY))
+# delay_df <- ddply(ABIA, .(DoY), summarize, daily_mean_delay = mean(TotalDelay))
+
+# Aggregates the mean accross Days of the Year
+delay_df <- aggregate(TotalDelay ~ DoY, ABIA, mean)
+
+
+######### Heat Map ##
+
+ggplot_calendar_heatmap(delay_df, 
+                        cDateColumnName = "DoY",
+                        cValueColumnName = "TotalDelay",
+                        dayBorderSize = 0.1, dayBorderColour = "white",
+                        monthBorderSize = .75, monthBorderColour = "white") +
+  scale_fill_continuous(low = "black", high = "red", name = "Total Delay (mins)") +
+  ylab(NULL) + xlab(NULL) +
+  theme(legend.position = 'bottom',
+        strip.background = element_blank(), 
+        plot.background = element_blank(),
+        strip.text = element_blank())
+
+
+####### Week average #######
+
+# Brute force code that didn't need
+# delay_wk_df <- aggregate(TotalDelay ~ DayOfWeek, ABIA, mean)
+# df <- aggregate(TotalDelay ~ DayOfWeek, ABIA, median)[-1]
+# delay_wk_df <- append(delay_wk_df,df)
+# df <- aggregate(TotalDelay ~ DayOfWeek, ABIA, FUN = quantile, probs = 0.25)[-1]
+# delay_wk_df <- append(delay_wk_df,df)
+# df <- aggregate(TotalDelay ~ DayOfWeek, ABIA, FUN = quantile, probs = 0.75)[-1]
+# delay_wk_df <- append(delay_wk_df,df)
+# df <- aggregate(TotalDelay ~ DayOfWeek, ABIA, max)[-1]
+# delay_wk_df <- append(delay_wk_df,df)
+# df <- aggregate(TotalDelay ~ DayOfWeek, ABIA, min)[-1]
+# delay_wk_df <- append(delay_wk_df,df)
+
+
+#### Monthly delay by Carrier
+monthNumber = c(1:12)
+monthName = c("January", "February", "March", "April", "May", "June", 
+              "July", "August", "September", "October", "November", "December")
+month_df <- data.frame(monthNumber, monthName)
+
+airline_month <- data.frame(rep(unique(as.vector(ABIA$CarrierName)), each = 12))
+airline_month$month <- rep(1:16, each = 12)
+airline_month <- aggregate(TotalDelay ~ CarrierName + Month, ABIA, mean)
+
+airline_month$monthName <- month_df$monthName[match(unlist(airline_month$Month), month_df$monthNumber)]
+
+ggplot(airline_month, aes(x=Month)) + 
+  geom_line(aes(y=TotalDelay, col = CarrierName)) + 
+  labs(y="Total Delay (mins)",
+       colour = "") + 
+  theme(legend.position="bottom") +  
+  scale_x_discrete(limits = monthName) +
+  theme(axis.text.x = element_text( angle=25, vjust = 0.8),
+        axis.title.x=element_blank())
+
+
+#### Weekly delay by Carrier
+
+
+weekNumber = c(1:7)
+weekName = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+week_df <- data.frame(weekNumber, weekName)
+
+airline_week <- data.frame(rep(unique(as.vector(ABIA$CarrierName)), each = 7))
+airline_week$DayOfWeek <- rep(1:16, each = 7)
+airline_week <- aggregate(TotalDelay ~ CarrierName + DayOfWeek, ABIA, mean)
+
+ggplot(airline_week, aes(x=DayOfWeek)) + 
+  geom_line(aes(y=TotalDelay, col = CarrierName)) + 
+  labs(y="Total Delay (mins)",
+       colour = "") + 
+  theme(legend.position="bottom") +  
+  scale_x_discrete(limits = weekName) +
+  theme(axis.text.x = element_text( angle=25, vjust = 0.8),
+        axis.title.x=element_blank())
 
 #Creating a Subset
 ABIA$TotalDelay <- ABIA$DepDelay + ABIA$ArrDelay # defining an important variable
@@ -320,6 +646,58 @@ AvgCarrierDelayMedian <- aggregate(DenFlights$TotalDelay ~ DenFlights$UniqueCarr
 colnames(AvgCarrierDelayMedian) <- c("Carrier", "Avg Delay") # renaming the columns
 AvgCarrierDelayMedian <- AvgCarrierDelayMedian[order(c("F9", "WN", "UA", "YV", "OO")), ]  # sort
 AvgCarrierDelayMedian$Carrier <- factor(AvgCarrierDelayMedian$Carrier, levels = c("F9", "WN", "UA", "YV", "OO"))  # to retain the order in plot
+ggplot(data=AvgCarrierDelayMedian, aes(x=AvgCarrierDelayMedian$Carrier, y=AvgCarrierDelayMedian$`Avg Delay`))+
+  geom_bar(stat="identity", width=.5, fill="tomato3") + 
+  labs(title="Median Delay to Denver", 
+       x="Carrier",
+       y="Median Delay (minutes)",
+       subtitle="Airline Carrier vs Median Delay", 
+       caption="source: ABIA") + 
+  theme(axis.text.x = element_text(angle=0, vjust=0.6))
+```
+
+```{r echo=FALSE}
+ani_month
+
+ggplot_calendar_heatmap(delay_df, 
+                        cDateColumnName = "DoY",
+                        cValueColumnName = "TotalDelay",
+                        dayBorderSize = 0.1, dayBorderColour = "white",
+                        monthBorderSize = .75, monthBorderColour = "white") +
+  scale_fill_continuous(low = "black", high = "red", name = "Total Delay (mins)") +
+  ylab(NULL) + xlab(NULL) +
+  theme(legend.position = 'bottom',
+        strip.background = element_blank(), 
+        plot.background = element_blank(),
+        strip.text = element_blank())
+
+ggplot(airline_month, aes(x=Month)) + 
+  geom_line(aes(y=TotalDelay, col = CarrierName)) + 
+  labs(y="Total Delay (mins)",
+       colour = "") + 
+  theme(legend.position="bottom") +  
+  scale_x_discrete(limits = monthName) +
+  theme(axis.text.x = element_text( angle=25, vjust = 0.8),
+        axis.title.x=element_blank())
+
+ggplot(airline_week, aes(x=DayOfWeek)) + 
+  geom_line(aes(y=TotalDelay, col = CarrierName)) + 
+  labs(y="Total Delay (mins)",
+       colour = "") + 
+  theme(legend.position="bottom") +  
+  scale_x_discrete(limits = weekName) +
+  theme(axis.text.x = element_text( angle=25, vjust = 0.8),
+        axis.title.x=element_blank())
+
+ggplot(data=AvgCarrierDelay, aes(x=AvgCarrierDelay$Carrier, y=AvgCarrierDelay$`Avg Delay`))+
+  geom_bar(stat="identity", width=.5, fill="tomato3") + 
+  labs(title="Average Delays to Denver", 
+       x="Carrier",
+       y="AvgDelay (minutes)",
+       subtitle="Airline Carrier vs Average Minutes Delayed", 
+       caption="source: ABIA") + 
+  theme(axis.text.x = element_text(angle=0, vjust=0.6)) 
+
 ggplot(data=AvgCarrierDelayMedian, aes(x=AvgCarrierDelayMedian$Carrier, y=AvgCarrierDelayMedian$`Avg Delay`))+
   geom_bar(stat="identity", width=.5, fill="tomato3") + 
   labs(title="Median Delay to Denver", 
