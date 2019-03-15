@@ -40,7 +40,7 @@ For the second question, we first wanted to gain a basic understanding of the wa
 Below is our graph for RMSE across many values of K. The Red line represents the RMSE of a linear model, the minimum RMSE of the linear model which is typically around 11,000. The Green line represnt the minimum RMSE of the KNN model. The minimum K value is usually between 10 and 20 with a RMSE of around 8,000. 
 ![image](https://user-images.githubusercontent.com/47119190/54466674-d189c900-474e-11e9-9087-1a72d93049fc.png)
 
-
+Below is our graph for accuracy across many values of K. The Red line represents the accuracy of a linear model, the minimum RMSE of the linear model which is typically around 56%. The Green line represents the minimum accuracy of the KNN model. 
 ![image](https://user-images.githubusercontent.com/47119190/54466708-fa11c300-474e-11e9-8051-7307951e7c53.png)
 
 Linear Model Statistics
