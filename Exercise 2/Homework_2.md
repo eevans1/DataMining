@@ -69,7 +69,7 @@ False Discovery Rate
 Logit Model Statistics
 Confusion Matrix
     ##    yhat
-    ## y      0    1
+    ##   y      0    1
     ##   0  144 3831
     ##   1   67 3887
 
@@ -91,7 +91,7 @@ False Positive Rate
 False Discovery Rate
 ##### [1] 0.504377
 
-####Part 2
+#### Part 2
     
     ##    yhat
     ## y      0    1
