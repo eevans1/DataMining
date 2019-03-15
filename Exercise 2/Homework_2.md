@@ -43,13 +43,13 @@ Below is our graph for RMSE across many values of K. The Red line represents the
 
 Linear Model Statistics
 Confusion Matrix
-    ##    yhat
-    ## y      0    1
-    ##   0   50 4001
-    ##   1   34 3844
+#####    yhat
+##### y      0    1
+#####   0   50 4001
+#####   1   34 3844
 
 RMSE
-    ## [1] 11642.3
+##### [1] 11642.3
 
 Out-of-Sample Accuracy
     ## [1] 0.4969378
