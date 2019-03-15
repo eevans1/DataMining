@@ -43,6 +43,7 @@ Below is our graph for RMSE across many values of K. The Red line represents the
 
 Linear Model Statistics
 Confusion Matrix
+
 ![image](https://user-images.githubusercontent.com/47119190/54467189-98068d00-4751-11e9-88b2-9dbeac8a3313.png)
 
 RMSE
@@ -65,6 +66,7 @@ False Discovery Rate
 
 Logit Model Statistics
 Confusion Matrix
+
 ![image](https://user-images.githubusercontent.com/47119190/54467201-b1a7d480-4751-11e9-9fce-6b48ec842682.png)
 
 RMSE
@@ -89,30 +91,42 @@ False Discovery Rate
     
 ![image](https://user-images.githubusercontent.com/47119190/54467222-c97f5880-4751-11e9-90f0-134cc663a5c3.png)
 
-    ## [1] 11710.69
+RMSE
+##### [1] 11710.69
 
-    ## [1] 0.6223597
+Out-of-Sample Accuracy
+##### [1] 0.6223597
 
-    ## [1] 0.3776403
+Overall Error Rate
+##### [1] 0.3776403
 
-    ## [1] 0.6283695
+True Positive Rate
+##### [1] 0.6283695
 
-    ## [1] 0.3834863
+False Positive Rate
+##### [1] 0.3834863
 
-    ## [1] 0.3855067
+False Discovery Rate
+##### [1] 0.3855067
 
 ![image](https://user-images.githubusercontent.com/47119190/54467251-e61b9080-4751-11e9-9c27-c02b6a860a91.png)
 
-    ## [1] 12177.52
+RMSE
+##### [1] 12177.52
 
-    ## [1] 0.5727103
+Out-of-Sample Accuracy
+##### [1] 0.5727103
 
-    ## [1] 0.4272897
+Overall Error Rate
+##### [1] 0.4272897
 
-    ## [1] 0.2423156
+True Positive Rate
+##### [1] 0.2423156
 
-    ## [1] 0.1051811
+False Positive Rate
+##### [1] 0.1051811
 
-    ## [1] 0.307953
+False Discovery Rate
+##### [1] 0.307953
 
 Both models are not great at predicting whether an article will go viral or not. There is a bias-variance tradeoff between the two methods.
