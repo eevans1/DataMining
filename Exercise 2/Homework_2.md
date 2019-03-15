@@ -52,19 +52,19 @@ RMSE
 ##### [1] 11642.3
 
 Out-of-Sample Accuracy
-    ## [1] 0.4969378
+##### [1] 0.4969378
 
 Overall Error Rate
-    ## [1] 0.5030622
+##### [1] 0.5030622
 
 True Positive Rate
-    ## [1] 0.9942638
+##### [1] 0.9942638
 
 False Positive Rate
-    ## [1] 0.9873793
+##### [1] 0.9873793
 
 False Discovery Rate
-    ## [1] 0.504885
+##### [1] 0.504885
 
 Logit Model Statistics
 Confusion Matrix
@@ -74,22 +74,22 @@ Confusion Matrix
     ##   1   67 3887
 
 RMSE
-    ## [1] 9961.656
+##### [1] 9961.656
 
 Out-of-Sample Accuracy
-    ## [1] 0.5590028
+##### [1] 0.5590028
 
 Overall Error Rate
-    ## [1] 0.4409972
+##### [1] 0.4409972
 
 True Positive Rate
-    ## [1] 0.9929102
+##### [1] 0.9929102
 
 False Positive Rate
-    ## [1] 0.9773512
+##### [1] 0.9773512
 
 False Discovery Rate
-    ## [1] 0.504377
+##### [1] 0.504377
 
 ####Part 2
     
