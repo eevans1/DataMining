@@ -43,10 +43,7 @@ Below is our graph for RMSE across many values of K. The Red line represents the
 
 Linear Model Statistics
 Confusion Matrix
-#####    yhat
-#####   y           0         1
-#####   0     50   4001
-#####   1     34   3844
+![image](https://user-images.githubusercontent.com/47119190/54467189-98068d00-4751-11e9-88b2-9dbeac8a3313.png)
 
 RMSE
 ##### [1] 11642.3
@@ -68,10 +65,7 @@ False Discovery Rate
 
 Logit Model Statistics
 Confusion Matrix
-    ##    yhat
-    ##   y      0    1
-    ##   0  144 3831
-    ##   1   67 3887
+![image](https://user-images.githubusercontent.com/47119190/54467201-b1a7d480-4751-11e9-9fce-6b48ec842682.png)
 
 RMSE
 ##### [1] 9961.656
@@ -93,10 +87,7 @@ False Discovery Rate
 
 #### Part 2
     
-    ##    yhat
-    ## y      0    1
-    ##   0 2511 1512
-    ##   1 1437 2469
+![image](https://user-images.githubusercontent.com/47119190/54467222-c97f5880-4751-11e9-90f0-134cc663a5c3.png)
 
     ## [1] 11710.69
 
@@ -110,10 +101,7 @@ False Discovery Rate
 
     ## [1] 0.3855067
 
-    ##    yhat
-    ## y      0    1
-    ##   0 3556  487
-    ##   1 2879 1007
+![image](https://user-images.githubusercontent.com/47119190/54467251-e61b9080-4751-11e9-9c27-c02b6a860a91.png)
 
     ## [1] 12177.52
 
