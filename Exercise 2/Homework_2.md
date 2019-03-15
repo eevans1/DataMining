@@ -8,7 +8,7 @@ Question 1
 
 Below is our graph for RMSE across many values of K. The Red line represents the RMSE of a linear model; the minimum RMSE of the linear model which is typically around 58,000. The Green line represnt the minimum RMSE of the KNN model. The minimum K value is usually between 10 and 20 with a RMSE of around 61,000
 
-![](wutevah_files/figure-markdown_github/unnamed-chunk-2-1.png)
+![image](https://user-images.githubusercontent.com/47119190/54466630-8bcd0080-474e-11e9-8de7-29239aaf49d7.png)
 
 Question 2 To answer the first question, we decided to take a very direct approach. We started by dividing the data set into a train/test split. We then ran a logit regression of recall on dummy variables for four of the individual doctors, as well as the other risk factors using only the training set. Using the estimated coefficients, we then tested our results on the test set, and saw an accuracy rate of &gt;99%. This seems like a very strong indicator that the logit model is a good estimator of reality. Now we can determine individual doctor effect, simply by looking at their coefficient, while remembering that the baseline is the estimate for Dr. 13. 
 *Dr. 89: 0.48 
