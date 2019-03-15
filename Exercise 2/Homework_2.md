@@ -46,20 +46,26 @@ Confusion Matrix
 
 ![image](https://user-images.githubusercontent.com/47119190/54467189-98068d00-4751-11e9-88b2-9dbeac8a3313.png)
 
+
 RMSE
 ##### [1] 11642.3
+
 
 Out-of-Sample Accuracy
 ##### [1] 0.4969378
 
+
 Overall Error Rate
 ##### [1] 0.5030622
+
 
 True Positive Rate
 ##### [1] 0.9942638
 
+
 False Positive Rate
 ##### [1] 0.9873793
+
 
 False Discovery Rate
 ##### [1] 0.504885
@@ -72,61 +78,84 @@ Confusion Matrix
 RMSE
 ##### [1] 9961.656
 
+
 Out-of-Sample Accuracy
 ##### [1] 0.5590028
+
 
 Overall Error Rate
 ##### [1] 0.4409972
 
+
 True Positive Rate
 ##### [1] 0.9929102
 
+
 False Positive Rate
 ##### [1] 0.9773512
+
 
 False Discovery Rate
 ##### [1] 0.504377
 
 #### Part 2
-    
+
+Linear Model Statistics
+Confusion Matrix
+
 ![image](https://user-images.githubusercontent.com/47119190/54467222-c97f5880-4751-11e9-90f0-134cc663a5c3.png)
+
 
 RMSE
 ##### [1] 11710.69
 
+
 Out-of-Sample Accuracy
 ##### [1] 0.6223597
+
 
 Overall Error Rate
 ##### [1] 0.3776403
 
+
 True Positive Rate
 ##### [1] 0.6283695
+
 
 False Positive Rate
 ##### [1] 0.3834863
 
+
 False Discovery Rate
 ##### [1] 0.3855067
+
+Logit Model Statistics
+Confusion Matrix
 
 ![image](https://user-images.githubusercontent.com/47119190/54467251-e61b9080-4751-11e9-9c27-c02b6a860a91.png)
 
 RMSE
 ##### [1] 12177.52
 
+
 Out-of-Sample Accuracy
 ##### [1] 0.5727103
+
 
 Overall Error Rate
 ##### [1] 0.4272897
 
+
 True Positive Rate
 ##### [1] 0.2423156
+
 
 False Positive Rate
 ##### [1] 0.1051811
 
+
 False Discovery Rate
 ##### [1] 0.307953
+
 
 Both models are not great at predicting whether an article will go viral or not. There is a bias-variance tradeoff between the two methods.
