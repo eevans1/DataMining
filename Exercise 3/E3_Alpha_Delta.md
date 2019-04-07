@@ -32,7 +32,8 @@ Question 1: Model selection and regularization: green buildings
     ## Multiple R-squared:  0.6069, Adjusted R-squared:  0.6066 
     ## F-statistic:  1723 on 7 and 7812 DF,  p-value: < 2.2e-16
 
-![](E3_Alpha_Delta_files/figure-markdown_github/unnamed-chunk-3-1.png)
+![unnamed-chunk-3-1](https://user-images.githubusercontent.com/47119190/55689836-394ac280-594f-11e9-937f-56aae5d50c42.png)
+
 
 Question 2: What causes what?
 -----------------------------
