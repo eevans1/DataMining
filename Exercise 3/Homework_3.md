@@ -1,7 +1,7 @@
 Exercise 3
 ================
 Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
-07 April 2019
+08 April 2019
 
 Question 1: Model selection and regularization: green buildings
 ---------------------------------------------------------------
@@ -39,6 +39,70 @@ Next, we have moved on to stepwise selection. Essentially, this starts at our "b
 After that we create a sparse matrix, which is a prerequisite for using the gamma-lasso regression. This lasso regression is a convenient method of regularizing the model selection process. It basically minimizes the deviance of the model while also penalizing it for being overly complex - which is vital for improving out-of-sample predictions, which can perform poorly when models have been fit too closely to the pre-existing data that you are working with. The lasso approach uses the sparse matrix that we have setup to give sparse solutions which automatically select variables for us - a much simpler approach than the earlier exercises where we have attempted to fit predictive models by hand.
 
 ![](E3_Alpha_Delta_files/figure-markdown_github/unnamed-chunk-3-1.png)
+
+    ## 23 x 1 sparse Matrix of class "dgCMatrix"
+    ##                          seg100
+    ## intercept         -4.983093e+00
+    ## CS_PropertyID      .           
+    ## cluster            5.488910e-04
+    ## size               5.798664e-06
+    ## empl_gr            1.327552e-02
+    ## leasing_rate       6.356737e-03
+    ## stories            .           
+    ## age               -1.069636e-02
+    ## renovated         -7.212772e-02
+    ## class_a            1.875701e+00
+    ## class_b            2.496831e-01
+    ## LEED               9.997667e-01
+    ## Energystar         .           
+    ## green_rating       3.294395e-01
+    ## net               -1.835161e+00
+    ## amenities          4.378266e-01
+    ## cd_total_07       -9.994124e-05
+    ## hd_total07         2.786562e-04
+    ## total_dd_07        .           
+    ## Precipitation      .           
+    ## Gas_Costs         -1.191041e+02
+    ## Electricity_Costs  9.140417e+01
+    ## cluster_rent       1.029505e+00
+
+    ## 
+    ## Call:
+    ## lm(formula = Rent ~ size + age + class_a + class_b + amenities + 
+    ##     cluster_rent + cluster + leasing_rate + green_rating + size:cluster_rent + 
+    ##     size:cluster + cluster_rent:cluster + size:leasing_rate + 
+    ##     age:class_b + age:class_a + class_b:cluster_rent + cluster_rent:leasing_rate + 
+    ##     cluster:leasing_rate + class_a:cluster_rent + age:cluster_rent + 
+    ##     amenities:green_rating + size:class_a + size:class_b + size:age + 
+    ##     age:green_rating, data = g)
+    ## 
+    ## Coefficients:
+    ##               (Intercept)                       size  
+    ##                -1.239e+00                 -1.444e-05  
+    ##                       age                    class_a  
+    ##                 4.522e-02                  9.148e+00  
+    ##                   class_b                  amenities  
+    ##                 7.350e+00                  5.417e-01  
+    ##              cluster_rent                    cluster  
+    ##                 8.181e-01                 -2.135e-03  
+    ##              leasing_rate               green_rating  
+    ##                -2.348e-02                  1.477e+00  
+    ##         size:cluster_rent               size:cluster  
+    ##                 5.571e-07                  6.034e-09  
+    ##      cluster_rent:cluster          size:leasing_rate  
+    ##                 1.441e-04                  1.080e-07  
+    ##               age:class_b                age:class_a  
+    ##                -4.124e-02                 -4.049e-02  
+    ##      class_b:cluster_rent  cluster_rent:leasing_rate  
+    ##                -1.061e-01                  1.447e-03  
+    ##      cluster:leasing_rate       class_a:cluster_rent  
+    ##                -2.317e-05                 -1.169e-01  
+    ##          age:cluster_rent     amenities:green_rating  
+    ##                -7.782e-04                 -2.278e+00  
+    ##              size:class_a               size:class_b  
+    ##                -7.430e-06                 -5.091e-06  
+    ##                  size:age           age:green_rating  
+    ##                -3.114e-08                  3.274e-02
 
 In the end, we have estimated that green certification ratings increase the expected rent per square foot by around $1.47, and we found this using the model discovered by stepwise selection. Our lasso regression returned an estimate of -$0.33, which to us seems less reasonable than our estimate from stepwise selection, which is why we are going with the stepwise selection model.
 

@@ -51,6 +51,9 @@ lmstepbeta = coef(lm_step)
 
 scbeta = coef(sclasso) 
 ## Green rating coef: -0.3294
+
+scbeta
+lm_step
 ```
 
 In the end, we have estimated that green certification ratings increase the expected rent per square foot by around $1.47, and we found this using the model discovered by stepwise selection. Our lasso regression returned an estimate of -$0.33, which to us seems less reasonable than our estimate from stepwise selection, which is why we are going with the stepwise selection model.
