@@ -106,7 +106,7 @@ After that we create a sparse matrix, which is a prerequisite for using the gamm
 
 In the end, we have estimated that green certification ratings increase the expected rent per square foot by around $1.47, and we found this using the model discovered by stepwise selection. Our lasso regression returned an estimate of -$0.33, which to us seems less reasonable than our estimate from stepwise selection, which is why we are going with the stepwise selection model.
 
-As for whether or not the "green certification" effect is different for different buildings or not, we believe that it does not. We have arrived at this conclusion based on the fact that our stepwise selection model did not choose to include class interactions when assessing possible variables to include one-by-one. Therefore, it appears as though the "green certification" effect is indeed roughly similar across all or most buildings.
+As for whether or not the "green certification" effect varies by building, we believe that it does not. We have arrived at this conclusion based on the fact that our stepwise selection model did not choose to include class interactions when assessing possible variables to include one-by-one. Therefore, it appears as though the "green certification" effect is indeed roughly similar across all or most buildings.
 
 Question 2: What causes what?
 -----------------------------
