@@ -1,5 +1,6 @@
 ---
 title: "Exercise 4"
+author: Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
 always_allow_html: yes
 output: github_document
 date: "`r format(Sys.time(), '%d %B %Y')`"
@@ -12,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ##Question 1
-```{r}
+```{r warning=FALSE, include=FALSE}
 ## Exercise 4 
 # Question 1
 library(ggplot2)
@@ -41,6 +42,9 @@ pairs(X[,1:5], col = cluster_k$cluster, pch=16, cex=0.3)
 
 ## PCA ##
 pc_wine = prcomp(X, rank.=5)
+```
+
+```{r warning=FALSE, echo=FALSE}
 # Plot of variance for each PC
 plot(pc_wine, type="lines")
 summary(pc_wine)
@@ -97,7 +101,7 @@ hier_grid = foreach(i = cluster_grid, .combine = 'c') %do% {
 ```
 
 ##Question 2
-```{r}
+```{r warning=FALSE, echo=FALSE}
 ## Exercise 2
 # Question 2
 library(LICORS)
@@ -141,8 +145,14 @@ plot(comps[,1:5], col = cluster_kp_social$cluster, pch=16, cex=0.3)
 
 c1_kp = social[which(cluster_kp_social$cluster == 1),]
 c2_kp = social[which(cluster_kp_social$cluster == 2),]
+```
+
+```{r warning=FALSE, include=FALSE}
 summary(c1_kp)
 summary(c2_kp)
+```
+
+```{r warning=FALSE, echo=FALSE}
 ## We have some clusters but how should we compare??
 barplot(height = colSums(c1_kp[,-1]))
 barplot(height = colSums(c2_kp[,-1]))
@@ -181,7 +191,7 @@ summary(factor(hcluster_social))
 ```
 
 ##Question 3
-```{r}
+```{r warning=FALSE, echo=FALSE, include=FALSE}
 library(arules)
 library(arulesViz)
 
@@ -214,6 +224,9 @@ g = lapply(g, unique)
 
 #Cast playslists as "transactions" class
 g_trans = as(g, "transactions")
+```
+
+```{r warning=FALSE, echo=FALSE}
 summary(g_trans)
 
 support_val = .001
@@ -224,10 +237,15 @@ g_rules = apriori(g_trans,
                   parameter = list(support = support_val, 
                                    confidence = conf_val,
                                    maxlen = maxlen_val))
+```
+
+```{r warning=FALSE, echo=FALSE, include=FALSE}
 inspect(g_rules)
 # Look at a subset
 inspect(subset(g_rules, subset=lift > 2))
+```
 
+```{r warning=FALSE, echo=FALSE}
 # Plots
 plot(g_rules)
 #Other axis
