@@ -1,0 +1,249 @@
+---
+title: "Exercise 4"
+always_allow_html: yes
+output: github_document
+date: "`r format(Sys.time(), '%d %B %Y')`"
+---
+
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+##Question 1
+```{r}
+## Exercise 4 
+# Question 1
+library(ggplot2)
+library(LICORS)
+library(foreach)
+library(cluster)
+
+wine <- read.csv("https://raw.githubusercontent.com/jgscott/ECO395M/master/data/wine.csv")
+
+# Objectice sort reds from whites
+# Want 2 clusters?
+# Later want to distinguish between quality????
+
+# Pick out the 11 attibutes
+X = wine[,-c(12,13)]
+# Scale the entries
+X = scale(X, center = TRUE, scale = TRUE)
+y = wine[,13]
+# Looking at just the first few clusters the data seems very homogeneous
+pairs(X[,1:5], pch=16, cex=0.3)
+
+## K-means++ w/o PCA ##
+cluster_k = kmeanspp(X, k = 2, nstart = 25, iter.max = 1000)
+# Same plot with the k-means
+pairs(X[,1:5], col = cluster_k$cluster, pch=16, cex=0.3)
+
+## PCA ##
+pc_wine = prcomp(X, rank.=5)
+# Plot of variance for each PC
+plot(pc_wine, type="lines")
+summary(pc_wine)
+comps <- data.frame(pc_wine$x)
+# Plot 1st 5 PCs
+plot(comps[,1:5], pch = 16, col=rgb(0,0,0, alpha = 0.5), cex=0.3)
+# A few plots appear to have 2 groupings 
+
+## K-means++ clustering with PCA ##
+# Run kmeans++ with arbitrary k=5 on PCA
+cluster_kp = kmeanspp(comps, k = 2, nstart = 25, iter.max = 1000)
+plot(comps[,1:5], col = cluster_kp$cluster, pch=16, cex=0.3)
+# Appears to have itendified clusters along the 1st PC
+
+## Heirarchical Clustering ##
+# Pairwise distance matrix using the distance function
+distance_between_wine = dist(pc_wine$x, method='euclidean')
+# Hierarchical clustering
+# Complete seems to have break up the clusters quicker
+cluster_hier = hclust(distance_between_wine, method='complete')
+# Dendrogram
+plot(cluster_hier)
+# Problem dendogram is highly homogeneous
+# Arbitrarily choose k 
+# Maybe k = 18 
+# (2 colors) * (9 qualities) = 18 clusters??? -> k=18
+hcluster = cutree(cluster_hier, k=18)
+summary(factor(hcluster))
+
+## Check to see if we are picking up on the color based on kmeans++ ##
+c1_k = wine[which(cluster_k$cluster == 1),]
+c2_k = wine[which(cluster_k$cluster == 2),]
+summary(c1_k$color)
+summary(c2_k$color)
+## Look at how effective kmeans++ w/ PCA was ##
+c1_kp = wine[which(cluster_kp$cluster==1),]
+c2_kp = wine[which(cluster_kp$cluster==2),]
+summary(c1_kp$color)
+summary(c2_kp$color)
+# Heirarchical cluster??
+c1_h = wine[which(hcluster == 1),]
+summary(c1_h$color)
+summary(c1_h$quality)
+
+# Try and get data from 18 clusters of
+# Heirarchical clustering with k = 18 
+cluster_grid = seq(1, 18, by = 1)
+hier_grid = foreach(i = cluster_grid, .combine = 'c') %do% {
+  summary(wine[which(hcluster == i),]$color)
+}
+
+## Figure out quality prediction
+# Either try kmeans++ with higher k-val or hierachical 
+```
+
+##Question 2
+```{r}
+## Exercise 2
+# Question 2
+library(LICORS)
+library(foreach)
+library(cluster)
+library(wordcloud2)
+library(data.table)
+social <- read.csv("https://raw.githubusercontent.com/jgscott/ECO395M/master/data/social_marketing.csv")
+
+# each row is a user
+
+X_social = social[,-1]
+cluster_k_social = kmeanspp(X_social, k = 2, nstart = 25, iter.max = 1000)
+pairs(X_social[,1:5], col = cluster_k_social$cluster, pch=16, cex=0.3)
+## Typical clusters takes way too fucking long
+## PCA
+pc_social = prcomp(X_social, rank.=7)
+# Plot of variance for each PC
+plot(pc_social, type="lines")
+# Looks like 7 PC
+summary(pc_social)
+comps <- data.frame(pc_social$x)
+# Plot 1st 5 PCs
+plot(comps[,1:5], pch = 16, col=rgb(0,0,0, alpha = 0.5), cex=0.3)
+# A few plots appear to have 2 groupings 
+
+# Look through the K's
+k_grid_social = seq(2, 25, by = 1)
+N = nrow(social)
+SSE_grid_social = foreach(k = k_grid_social, .combine = 'c') %dopar% {
+  cluster_kp_social = kmeanspp(pc_social$x, k, nstart=25)
+  cluster_kp_social$tot.withinss
+}
+plot(SSE_grid_social)
+# No clear "elbow"
+# Lets choose k=6
+# Gap statistic takes way too long " stage steps exceeded maximum "
+k_clusters = 6
+cluster_kp_social = kmeanspp(pc_social$x, k = k_clusters, nstart = 25, iter.max = 1000)
+plot(comps[,1:5], col = cluster_kp_social$cluster, pch=16, cex=0.3)
+
+c1_kp = social[which(cluster_kp_social$cluster == 1),]
+c2_kp = social[which(cluster_kp_social$cluster == 2),]
+summary(c1_kp)
+summary(c2_kp)
+## We have some clusters but how should we compare??
+barplot(height = colSums(c1_kp[,-1]))
+barplot(height = colSums(c2_kp[,-1]))
+
+# Wordcloud
+wordclouds_df <- foreach(i = 1:k_clusters, .combine = 'rbind') %do% {
+  ci = social[which(cluster_kp_social$cluster == i),]
+  colSums(ci[,-1])
+}
+wordclouds_df <- t(wordclouds_df)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,1]))
+# w/o chatter
+wordclouds_nochat_df <- wordclouds_df[-1,]
+wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,1]))
+wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,2]))
+wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,3]))
+wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,4]))
+wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,5]))
+wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,6]))
+
+
+#################################################################
+
+## Heirarchical Clustering ##
+# Pairwise distance matrix using the distance function
+distance_between_social = dist(pc_social$x, method='euclidean')
+# Hierarchical clustering
+# Complete seems to have break up the clusters quicker
+cluster_hier_social = hclust(distance_between_social, method='complete')
+# Dendrogram
+plot(cluster_hier_social)
+# Problem dendogram is highly homogeneous
+# Arbitrarily choose k 
+hcluster_social = cutree(cluster_hier_social, k=10)
+summary(factor(hcluster_social))
+```
+
+##Question 3
+```{r}
+library(arules)
+library(arulesViz)
+
+grocery_raw = read.csv("https://raw.githubusercontent.com/jgscott/ECO395M/master/data/groceries.txt", header = FALSE)
+# Trip ID
+grocery_raw$ID = seq.int(nrow(grocery_raw))
+# Stack columns
+grocery <- cbind(grocery_raw[,5], stack(lapply(grocery_raw[,1:4], as.character)))[1:2]
+# Rename columns
+colnames(grocery) <- c("ID","items")
+# Aggregate and order by Trip ID
+grocery <- grocery[order(grocery$ID),]
+# Remove blanks
+grocery <- grocery[!(grocery$items==""),]
+# Renumber the rows
+row.names(grocery) <- 1:nrow(grocery)
+# turn IDs to factors 
+grocery$ID = factor(grocery$ID)
+
+grocery_raw <- readLines(con = "https://raw.githubusercontent.com/jgscott/ECO395M/master/data/groceries.txt" )
+
+# Create list of baskets - vectors of items by consumer
+# # apriori algorithm expects a list of baskets in a special format
+# In this case, one "basket" of songs per user
+# First split data into a list of artists for each user
+g = split(x=grocery$items, f=grocery$ID)
+
+# Remove duplicates ("de-dupe")
+g = lapply(g, unique)
+
+#Cast playslists as "transactions" class
+g_trans = as(g, "transactions")
+summary(g_trans)
+
+support_val = .001
+conf_val = .05
+maxlen_val = 5
+
+g_rules = apriori(g_trans,
+                  parameter = list(support = support_val, 
+                                   confidence = conf_val,
+                                   maxlen = maxlen_val))
+inspect(g_rules)
+# Look at a subset
+inspect(subset(g_rules, subset=lift > 2))
+
+# Plots
+plot(g_rules)
+#Other axis
+plot(g_rules, measure = c("support", "lift"), shading = "confidence")
+# two key plot
+plot(g_rules, method='two-key plot')
+
+# Look at key subsets
+inspect(subset(g_rules, support > 0.03))
+inspect(subset(g_rules, confidence > 0.3))
+
+# graph visualization
+sub1 = subset(g_rules, subset=confidence>0.15, support > 0.001)
+summary(sub1)
+plot(head(sub1, 10, by='lift'), method='paracoord')
+
+####### Association rules
+saveAsGraph(head(g_rules, n = 1000, by = "lift"), file = "g_rules.graphml")
+```
