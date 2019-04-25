@@ -172,21 +172,34 @@ wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,3
 wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,4]))
 wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,5]))
 wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,6]))
+```
 
-
+```{r warning=FALSE, echo=FALSE}
 #################################################################
 
 ## Heirarchical Clustering ##
 # Pairwise distance matrix using the distance function
 distance_between_social = dist(pc_social$x, method='euclidean')
+```
+
+```{r warning=FALSE, echo=FALSE}
 # Hierarchical clustering
 # Complete seems to have break up the clusters quicker
 cluster_hier_social = hclust(distance_between_social, method='complete')
 # Dendrogram
+```
+
+```{r warning=FALSE, echo=FALSE}
 plot(cluster_hier_social)
 # Problem dendogram is highly homogeneous
 # Arbitrarily choose k 
+```
+
+```{r warning=FALSE, echo=FALSE}
 hcluster_social = cutree(cluster_hier_social, k=10)
+```
+
+```{r warning=FALSE, echo=FALSE}
 summary(factor(hcluster_social))
 ```
 
@@ -245,7 +258,7 @@ inspect(g_rules)
 inspect(subset(g_rules, subset=lift > 2))
 ```
 
-```{r warning=FALSE, echo=FALSE}
+```{r warning=FALSE, echo=TRUE}
 # Plots
 plot(g_rules)
 #Other axis

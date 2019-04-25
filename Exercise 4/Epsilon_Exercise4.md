@@ -22,10 +22,10 @@ Question 1
     ##    2    1    1
 
     ##   red white 
-    ##    24  4830
+    ##  1575    68
 
     ##   red white 
-    ##  1575    68
+    ##    24  4830
 
     ##   red white 
     ##  1574    78
@@ -54,33 +54,33 @@ Question 2
 
 ![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-5-1.png)![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-5-2.png)<!--html_preserve-->
 
-<script type="application/json" data-for="htmlwidget-9b29218016ab0ab2a11e">{"x":{"word":["chatter","current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[11805,5557,4460,6122,2865,4159,6054,3641,4806,3039,1802,2243,3015,2260,2979,3852,3598,1762,3340,1455,1558,1283,1836,1638,2339,2634,4355,1776,3380,1870,2686,2594,2152,1121,31,1828],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0152477763659466,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<script type="application/json" data-for="htmlwidget-86a36521de5563a99e14">{"x":{"word":["chatter","current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[11805,5557,4460,6122,2865,4159,6054,3641,4806,3039,1802,2243,3015,2260,2979,3852,3598,1762,3340,1455,1558,1283,1836,1638,2339,2634,4355,1776,3380,1870,2686,2594,2152,1121,31,1828],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0152477763659466,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 <!--/html_preserve-->
 <!--html_preserve-->
 
-<script type="application/json" data-for="htmlwidget-f8205dbac95a9cb8ccb5">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[5557,4460,6122,2865,4159,6054,3641,4806,3039,1802,2243,3015,2260,2979,3852,3598,1762,3340,1455,1558,1283,1836,1638,2339,2634,4355,1776,3380,1870,2686,2594,2152,1121,31,1828],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0294021561581183,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<script type="application/json" data-for="htmlwidget-2e46eacb8eec8b6a23e2">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[5557,4460,6122,2865,4159,6054,3641,4806,3039,1802,2243,3015,2260,2979,3852,3598,1762,3340,1455,1558,1283,1836,1638,2339,2634,4355,1776,3380,1870,2686,2594,2152,1121,31,1828],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0294021561581183,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 <!--/html_preserve-->
 <!--html_preserve-->
 
-<script type="application/json" data-for="htmlwidget-14601437bbb315bb7c92">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[1077,3806,1394,471,759,1437,6091,1090,630,376,402,3312,517,740,880,800,421,757,369,1588,407,567,401,1337,444,863,318,742,639,544,572,423,296,3,156],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0295517977343622,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<script type="application/json" data-for="htmlwidget-91f9cab76e2e056d7574">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[602,643,1095,358,602,676,539,611,471,232,339,362,4267,511,658,4464,1022,638,196,244,160,266,255,391,501,443,221,407,304,282,424,386,175,4,185],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0403225806451613,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 <!--/html_preserve-->
 <!--html_preserve-->
 
-<script type="application/json" data-for="htmlwidget-9a5ab03a714e0eb98bb3">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[602,643,1095,358,602,676,539,611,471,232,339,362,4267,511,658,4464,1022,638,196,244,160,266,255,391,501,443,221,407,304,282,424,386,175,4,185],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0403225806451613,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<script type="application/json" data-for="htmlwidget-84f80520325cc0800d74">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[1077,3806,1394,471,759,1437,6091,1090,630,376,402,3312,517,740,880,800,421,757,369,1588,407,567,401,1337,444,863,318,742,639,544,572,423,296,3,156],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0295517977343622,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 <!--/html_preserve-->
 <!--html_preserve-->
 
-<script type="application/json" data-for="htmlwidget-7ad7d33fb5d837461822">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[1522,1302,2391,946,1042,1505,1274,2260,894,613,738,1196,935,1307,12111,1031,634,3311,855,555,441,2401,639,677,803,1095,539,994,979,721,6025,804,266,7,320],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0148625216745108,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<script type="application/json" data-for="htmlwidget-4b221589bb65e49a425f">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[1522,1302,2391,946,1042,1505,1274,2260,894,613,738,1196,935,1307,12111,1031,634,3311,855,555,441,2401,639,677,803,1095,539,994,979,721,6025,804,266,7,320],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.0148625216745108,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 <!--/html_preserve-->
 <!--html_preserve-->
 
-<script type="application/json" data-for="htmlwidget-3e6ff413d90c01ea8acc">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[2390,1521,7192,1145,1351,2091,1851,1597,1276,763,1014,1060,1005,4532,1684,1572,764,1522,884,782,754,675,819,1342,857,1225,711,1187,1504,1274,1234,1153,553,4,470],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.025027808676307,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<script type="application/json" data-for="htmlwidget-a4b9e3bf7a112e324773">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[882,761,3062,623,523,801,702,651,499,318,618,557,544,882,1050,748,435,6182,279,389,291,424,314,455,474,653,1993,552,307,544,675,2937,240,2,220],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.029116790682627,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 <!--/html_preserve-->
 <!--html_preserve-->
 
-<script type="application/json" data-for="htmlwidget-13a51f2c6ed1fc8894f3">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[882,761,3062,623,523,801,702,651,499,318,618,557,544,882,1050,748,435,6182,279,389,291,424,314,455,474,653,1993,552,307,544,675,2937,240,2,220],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.029116790682627,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<script type="application/json" data-for="htmlwidget-faafb0138e7f9cd945c2">{"x":{"word":["current_events","travel","photo_sharing","uncategorized","tv_film","sports_fandom","politics","food","family","home_and_garden","music","news","online_gaming","shopping","health_nutrition","college_uni","sports_playing","cooking","eco","computers","business","outdoors","crafts","automotive","art","religion","beauty","parenting","dating","school","personal_fitness","fashion","small_business","spam","adult"],"freq":[2390,1521,7192,1145,1351,2091,1851,1597,1276,763,1014,1060,1005,4532,1684,1572,764,1522,884,782,754,675,819,1342,857,1225,711,1187,1504,1274,1234,1153,553,4,470],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.025027808676307,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 <!--/html_preserve-->
-![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-5-10.png)
+![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
     ##    1    2    3    4    5    6    7    8    9   10 
     ##  299 5734  436  663   33  172  410   90   18   27
@@ -135,22 +135,42 @@ Question 3
     ## set item appearances ...[0 item(s)] done [0.00s].
     ## set transactions ...[169 item(s), 15296 transaction(s)] done [0.00s].
     ## sorting and recoding items ... [151 item(s)] done [0.00s].
-    ## creating transaction tree ... done [0.01s].
+    ## creating transaction tree ... done [0.02s].
     ## checking subsets of size 1 2 3 4 done [0.00s].
     ## writing ... [1044 rule(s)] done [0.00s].
     ## creating S4 object  ... done [0.00s].
 
-    ## To reduce overplotting, jitter is added! Use jitter = 0 to prevent jitter.
-
-![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-9-1.png)
-
-    ## To reduce overplotting, jitter is added! Use jitter = 0 to prevent jitter.
-
-![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-9-2.png)
+``` r
+# Plots
+plot(g_rules)
+```
 
     ## To reduce overplotting, jitter is added! Use jitter = 0 to prevent jitter.
 
-![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-9-3.png)
+![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-14-1.png)
+
+``` r
+#Other axis
+plot(g_rules, measure = c("support", "lift"), shading = "confidence")
+```
+
+    ## To reduce overplotting, jitter is added! Use jitter = 0 to prevent jitter.
+
+![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-14-2.png)
+
+``` r
+# two key plot
+plot(g_rules, method='two-key plot')
+```
+
+    ## To reduce overplotting, jitter is added! Use jitter = 0 to prevent jitter.
+
+![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-14-3.png)
+
+``` r
+# Look at key subsets
+inspect(subset(g_rules, support > 0.03))
+```
 
     ##      lhs                   rhs                support    confidence
     ## [1]  {}                 => {newspapers}       0.05132061 0.05132061
@@ -186,6 +206,10 @@ Question 3
     ## [14] 1.000000 2513 
     ## [15] 1.999064  625 
     ## [16] 1.999064  625
+
+``` r
+inspect(subset(g_rules, confidence > 0.3))
+```
 
     ##      lhs                        rhs                    support confidence      lift count
     ## [1]  {liquor}                => {bottled beer}     0.002811192  0.3944954  7.618942    43
@@ -283,6 +307,12 @@ Question 3
     ## [52] {other vegetables,                                                                  
     ##       yogurt}                => {whole milk}       0.006341527  0.3991770  2.429690    97
 
+``` r
+# graph visualization
+sub1 = subset(g_rules, subset=confidence>0.15, support > 0.001)
+summary(sub1)
+```
+
     ## set of 319 rules
     ## 
     ## rule length distribution (lhs + rhs):sizes
@@ -305,4 +335,13 @@ Question 3
     ##     data ntransactions support confidence
     ##  g_trans         15296   0.001       0.05
 
-![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-9-4.png)
+``` r
+plot(head(sub1, 10, by='lift'), method='paracoord')
+```
+
+![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-14-4.png)
+
+``` r
+####### Association rules
+saveAsGraph(head(g_rules, n = 1000, by = "lift"), file = "g_rules.graphml")
+```
