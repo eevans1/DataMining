@@ -78,6 +78,7 @@ Question 2: Market Segmentation
 As previously, we begin by loading our libraries and data
 
 Here we are finding out, probably the most important piece of information, which topics have the most unique users tweeting about them, and then among those topics, which ones are tweeted about this most. This is important because any insights we gain through data analysis will be useless if they are not consistent with these metrics.
+![plot zoom](https://user-images.githubusercontent.com/47119190/56870608-80205b00-69d7-11e9-9704-165987e7b020.PNG)
 
 Here we use and elbow plot to determine that we should be using k=9 for PCA and run PCA analysis. Unfortunately, we still do not see much in the way of a natural grouping using this method. ![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
