@@ -7,7 +7,7 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 ---
 
 
-##Question 1
+##Question 1: Clustering and PCA
 To begin, we load in our libraries and the data
 ```{r warning =FALSE, echo=FALSE, include=FALSE}
 ## Exercise 4 
@@ -206,7 +206,7 @@ colnames(grid2) <- c("3", "4", "5", "6", "7", "8", "9")
 
 Conclusion: We were able to identify wines by type using K-means with and without PCA included inside the model as well. Unfortunately, we were not able to find a model which would also effectively predict color and quality.
 
-##Question 2
+##Question 2: Market Segmentation
 
 As previously, we begin by loading our libraries and data
 ```{r warning=FALSE, echo=FALSE, include=FALSE}
@@ -341,7 +341,7 @@ rect.hclust(cluster_hier_social, k=10, border = 2:6)
 
 Here we block off branches of the tree to see the 10 groups with the closest associations. Our suggestion would be to look at these associations, and within the groups, determine which groups are most popular among twitter users in the sample. These should be the topics that are targeted for marketing campaigns. Looking back at what we looked into in lines 18-24, the health-nutrition/photo sharing cluster would be a very good one to target, with average number of tweets among users who are tweeting of roughly 5 and 3.4. Another good suggestion would be to target the cluster with outdoor because this is a very large cluster that would have a lot of tangential effects (i.e. target outdoor would likely get picked up by users tweeting about school, sports, music, etc)
 
-##Question 3
+##Question 3: Association rules for grocery purchases
 Just data manipulation
 ```{r warning=FALSE, echo=FALSE, include=FALSE}
 library(arules)
