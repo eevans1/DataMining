@@ -1,79 +1,162 @@
 ---
 title: "Exercise 4"
-author: Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel
+author: Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel --
 always_allow_html: yes
 output: github_document
 date: "`r format(Sys.time(), '%d %B %Y')`"
 ---
 
 
-```{r setup, include=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-
 ##Question 1
-```{r warning=FALSE, include=FALSE}
+To begin, we load in our libraries and the data
+```{r warning =FALSE, echo=FALSE, include=FALSE}
 ## Exercise 4 
 # Question 1
+
+#--Libraries
 library(ggplot2)
 library(LICORS)
 library(foreach)
 library(cluster)
 
+#--Data Read in
 wine <- read.csv("https://raw.githubusercontent.com/jgscott/ECO395M/master/data/wine.csv")
-
-# Objectice sort reds from whites
-# Want 2 clusters?
-# Later want to distinguish between quality????
-
-# Pick out the 11 attibutes
-X = wine[,-c(12,13)]
-# Scale the entries
-X = scale(X, center = TRUE, scale = TRUE)
-y = wine[,13]
-# Looking at just the first few clusters the data seems very homogeneous
-pairs(X[,1:5], pch=16, cex=0.3)
-
-## K-means++ w/o PCA ##
-cluster_k = kmeanspp(X, k = 2, nstart = 25, iter.max = 1000)
-# Same plot with the k-means
-pairs(X[,1:5], col = cluster_k$cluster, pch=16, cex=0.3)
-
-## PCA ##
-pc_wine = prcomp(X, rank.=5)
+# Pass quality as factor
+wine$quality <- as.factor(wine$quality)
+# Objectice: sort reds from whites
 ```
 
-```{r warning=FALSE, echo=FALSE}
-# Plot of variance for each PC
+Here we are getting a visual for the interactions between the variables
+```{r warning =FALSE, echo=FALSE}
+#--Data fixin
+#-Pick out the 11 attibutes as your x-values
+X = wine[,-c(12,13)]
+#-Scale the entries
+X = scale(X, center = TRUE, scale = TRUE)
+#-y is a vector of colors
+y = wine[,13]
+#-Looking at just the first few varaibles, the data seems very homogeneous
+pairs(X[,1:5], pch=16, cex=0.3)
+
+#-------------------------------------------------------------#
+```
+
+Here we are creating an elbow plot to determine the "optimal" k value. That is, we identify that at k=5 (or using 5 variables for PCA) there seems to be an "elbow" and this is indicates it should be a good choice.
+```{r warning =FALSE, echo=FALSE}
+#--PCA
+# Now we run a PCA specficiation
+pc_wine = prcomp(X, rank.=5)
+# Plot of variance for each PCA component
 plot(pc_wine, type="lines")
 summary(pc_wine)
+# It looks like around 5 principal components will capture a sizeable amount of the variance
+# comps is a data frame of our PCA x-values
+```
+
+We create graphs from what we learned during PCA with k=5, and see that there are still some graphs which clearly 
+have a very loose cluster, or perhaps even 2 clusters. 
+
+```{r warning =FALSE, echo=FALSE}
 comps <- data.frame(pc_wine$x)
 # Plot 1st 5 PCs
 plot(comps[,1:5], pch = 16, col=rgb(0,0,0, alpha = 0.5), cex=0.3)
-# A few plots appear to have 2 groupings 
+# A few plots appear to have 2 distinct groupings 
 
-## K-means++ clustering with PCA ##
-# Run kmeans++ with arbitrary k=5 on PCA
-cluster_kp = kmeanspp(comps, k = 2, nstart = 25, iter.max = 1000)
-plot(comps[,1:5], col = cluster_kp$cluster, pch=16, cex=0.3)
-# Appears to have itendified clusters along the 1st PC
+#-------------------------------------------------------------#
+```
 
-## Heirarchical Clustering ##
-# Pairwise distance matrix using the distance function
+
+Since we had a higher than desired level of dispersion in some of the clusters from PCA, we've decided now to explore Hierarchical clustering. This is setting up the dendrogram and also grouping the dendrogram into groups of 9 wines with the closest associations. 
+
+```{r warning =FALSE, echo=FALSE}
+#--Heirarchical Clustering
+# We first attempt a heirarchical clustering technique
+# Pairwise distance matrix using euclidean distance 
 distance_between_wine = dist(pc_wine$x, method='euclidean')
-# Hierarchical clustering
-# Complete seems to have break up the clusters quicker
+# After trying multiple methods, complete seems to have break up the clusters quicker
 cluster_hier = hclust(distance_between_wine, method='complete')
-# Dendrogram
+# Here we attempt to show the clustering
 plot(cluster_hier)
-# Problem dendogram is highly homogeneous
-# Arbitrarily choose k 
-# Maybe k = 18 
-# (2 colors) * (9 qualities) = 18 clusters??? -> k=18
-hcluster = cutree(cluster_hier, k=18)
-summary(factor(hcluster))
+rect.hclust(cluster_hier, k=14, border = 2:6)
+# Problem: dendogram is highly concentrated
+# Need to cut the tree at an advantageous k-value
+# We break up the dendrogram into 3 logical segments: (2,7,14)
+# We'll test  2 clusters to check for distinguising color
+# 7 for quality range, and 14 for quality and color
+#  k = (2 colors) * (7 quality range) = 14 clusters
+```
 
+Here, we are setting up 3 different ways of looking at our wine data in an attempt to sort it effectively, 
+```{r warning =FALSE, echo=FALSE}
+##.	Setting k=2 to split wine into red or white
+##.	Setting k=7 to split wines into quality classes
+##.	Setting k=14 to identify wine by both high and low quality
+
+hcluster2 = cutree(cluster_hier, k=2)
+hcluster7 = cutree(cluster_hier, k=7)
+hcluster14 = cutree(cluster_hier, k=14)
+```
+
+Our result are not good. This model seems to be entirely incapable of identifying wine into red or white.
+```{r warning =FALSE, echo=FALSE}
+# Results
+table(hcluster2, wine$color)
+# The k=2 clusters doesn't seem to distinguish between colors
+```
+
+We also don't seem to be able to identify wine and quality clusters in this model
+```{r warning =FALSE, echo=FALSE}
+grid3 = data.frame()
+for(i in 1:14){
+  temp1 = summary(wine[which(hcluster14 == i),]$color)
+  temp2 = summary(wine[which(hcluster14 == i),]$quality)
+  grid3 <- rbind(grid3, c( temp1 , temp2))
+}
+colnames(grid3) <- c("red", "white", "3", "4", "5", "6", "7", "8", "9")
+
+grid4 = data.frame()
+for(i in 1:7){
+  grid4 <- rbind(grid4, summary(wine[which(hcluster7 == i),]$quality))
+}
+colnames(grid4) <- c("3", "4", "5", "6", "7", "8", "9")
+
+# Likewise the clusters to not seem to be finding 
+# unique combinations on color and quality
+
+#-------------------------------------------------------------#
+
+# Now we try K means w/ and w/o PCA
+```
+
+Here we are running K-means without PCA, and we do seem to be getting 2 different clusters in each graph when we separate the wines by color.  
+```{r warning =FALSE, echo=FALSE}
+#--K-means++ w/o PCA
+# First we run k-means without the PCA reduction
+# The data set is computationally trivial to solve w/o dimensionality reduction
+# Here we'll let k = 2, representing the two wines
+cluster_k = kmeanspp(X, k = 2, nstart = 25, iter.max = 1000)
+# Now, we can look at the above plot, now with the k-means clustering
+pairs(X[,1:5], col = cluster_k$cluster, pch=16, cex=0.3)
+# There does seem to be two distinct groups
+
+#-------------------------------------------------------------#
+```
+
+Here we have very clear clustering in each PCAxPCA graph within each type of wine denoted by different colors
+```{r warning =FALSE, echo=FALSE}
+#--K-means++ clustering with PCA
+# Having now performed dimensionality reduction we can now run the kmeans clustering technique
+# Run kmeans++ with PCA again with the k=2 specification 
+cluster_kp = kmeanspp(comps, k = 2, nstart = 25, iter.max = 1000)
+# Now replot the above with the clusters
+plot(comps[,1:5], col = cluster_kp$cluster, pch=16, cex=0.3)
+# A cute result no doubt
+# It appears to have well itendified clusters along the 1st PC
+# Not so much along the other ones
+```
+
+Here we are setting up and testing whether k-means can predict color. We see that it is clearly predicting color fairly well for both with and without PCA.
+```{r warning =FALSE, echo=FALSE}
 ## Check to see if we are picking up on the color based on kmeans++ ##
 c1_k = wine[which(cluster_k$cluster == 1),]
 c2_k = wine[which(cluster_k$cluster == 2),]
@@ -84,24 +167,49 @@ c1_kp = wine[which(cluster_kp$cluster==1),]
 c2_kp = wine[which(cluster_kp$cluster==2),]
 summary(c1_kp$color)
 summary(c2_kp$color)
-# Heirarchical cluster??
-c1_h = wine[which(hcluster == 1),]
-summary(c1_h$color)
-summary(c1_h$quality)
-
-# Try and get data from 18 clusters of
-# Heirarchical clustering with k = 18 
-cluster_grid = seq(1, 18, by = 1)
-hier_grid = foreach(i = cluster_grid, .combine = 'c') %do% {
-  summary(wine[which(hcluster == i),]$color)
-}
-
-## Figure out quality prediction
-# Either try kmeans++ with higher k-val or hierachical 
+# The kmeans w/ and w/o PCA appears to be pick up the color variation
 ```
 
+Here we are trying to predict both color and quality. This particular model doesn't seem to be doing a very good job of identifying quality. We come to this conclusion based on the fact that there seems to be considerable spread in the colors used to identify quality within each of the PCAxPCA graph.
+```{r warning =FALSE, echo=FALSE}
+## Try and predict quality
+# Start w/ k=14
+cluster_kp14 = kmeanspp(comps, k = 14, nstart = 25, iter.max = 1000)
+plot(comps[,1:5], col = cluster_kp14$cluster, pch=16, cex=0.3)
+
+table(wine$quality, wine$color)
+# Looking at the original data we can see the distribution of colors & qualities
+
+# Get data across the 14 k-clusters
+grid = data.frame()
+for(i in 1:14){
+  temp1 = summary(wine[which(cluster_kp14$cluster == i),]$color)
+  temp2 = summary(wine[which(cluster_kp14$cluster == i),]$quality)
+  grid <- rbind(grid, c( temp1 , temp2))
+}
+colnames(grid) <- c("red", "white", "3", "4", "5", "6", "7", "8", "9")
+# Doesnt appear to be deducing quality
+```
+
+We try to identify quality with k-means. We don't appear to be having much success with this.
+```{r warning =FALSE, echo=FALSE}
+# Get data across the 7 k-clusters
+cluster_kp7 = kmeanspp(comps, k = 7, nstart = 25, iter.max = 1000)
+plot(comps[,1:5], col = cluster_kp7$cluster, pch=16, cex=0.3)
+grid2 = data.frame()
+for(i in 1:7){
+  grid2 <- rbind(grid2, summary(wine[which(cluster_kp7$cluster == i),]$quality))
+}
+colnames(grid2) <- c("3", "4", "5", "6", "7", "8", "9")
+# Clusters seem to not be able to identify quality
+```
+
+Conclusion: We were able to identify wines by type using K-means with and without PCA included inside the model as well. Unfortunately, we were not able to find a model which would also effectively predict color and quality.
+
 ##Question 2
-```{r warning=FALSE, echo=FALSE}
+
+As previously, we begin by loading our libraries and data
+```{r warning=FALSE, echo=FALSE, include=FALSE}
 ## Exercise 2
 # Question 2
 library(LICORS)
@@ -109,101 +217,132 @@ library(foreach)
 library(cluster)
 library(wordcloud2)
 library(data.table)
+library(factoextra)
+library(ggfortify)
+library(tidyverse)
+library(ggplot2)
+library(grid)
+library(gridExtra)
 social <- read.csv("https://raw.githubusercontent.com/jgscott/ECO395M/master/data/social_marketing.csv")
+social_marketing<- read.csv("https://raw.githubusercontent.com/jgscott/ECO395M/master/data/social_marketing.csv")
+```
 
-# each row is a user
 
-X_social = social[,-1]
-cluster_k_social = kmeanspp(X_social, k = 2, nstart = 25, iter.max = 1000)
-pairs(X_social[,1:5], col = cluster_k_social$cluster, pch=16, cex=0.3)
-## Typical clusters takes way too fucking long
-## PCA
-pc_social = prcomp(X_social, rank.=7)
-# Plot of variance for each PC
+Here we are finding out, probably the most important piece of information, which topics have the most unique users tweeting about them, and then among those topics, which ones are tweeted about this most. This is important because any insights we gain through data analysis will be useless if they are not consistent with these metrics.
+```{r warning=FALSE, echo=FALSE, include=FALSE}
+#here we are identifying what people care about
+summary(social_marketing)
+
+data<-data.frame(colSums(social_marketing !=0))
+
+is.na(social_marketing) <- social_marketing==0
+nzmeans<-data.frame(colMeans(social_marketing[,2:37], na.rm=TRUE))
+nzmeans
+```
+
+Here we use and elbow plot to determine that we should be using k=9 for PCA and run PCA analysis. Unfortunately, we still do not see much in the way of a natural grouping using this method.
+```{r warning=FALSE, echo=FALSE}
+# Each row is a user
+# Remove any twitters with any spam
+# This represents only a small % of observations 
+social <- social[!(social$spam > 0),]
+# Sum up the rows (not including the ID row)
+row_sums <- rowSums(social[,-1])
+# Choosing twitter accounts that aren't just straight porn
+social <- social[social$adult/row_sums < 0.20,]
+# Choosing all columns except (chatter, uncategorized, username, and spam columns for X
+X_social = social[,-c(1,2,6,36)]
+
+#---------------------------------------------------------------#
+#--PCA
+# Typical clustering takes way too fucking long
+pc_social = prcomp(X_social, rank.=9, scale. = TRUE, center = TRUE)
+# Plot of variance for each PC ~ Looks like 9 PCs
 plot(pc_social, type="lines")
-# Looks like 7 PC
+# Summary of the data indicates were are accepting around 60% of the variance
+# With <1/3 of the of the information
 summary(pc_social)
-comps <- data.frame(pc_social$x)
+comps_social <- data.frame(pc_social$x)
 # Plot 1st 5 PCs
-plot(comps[,1:5], pch = 16, col=rgb(0,0,0, alpha = 0.5), cex=0.3)
-# A few plots appear to have 2 groupings 
+plot(comps_social[,1:5], pch = 16, col=rgb(0,0,0, alpha = 0.5), cex=0.3)
+# No clear groupdings
+# Loadings 
+loadings = pc_social$rotation
+loadings[,1]%>%sort%>%head(10)
 
-# Look through the K's
+#--------------------------------------------------------------#
+```
+
+
+Now we will try to run K-means with PCA clustering. First we'll try to look at an elbow plot to find the optimal k. Unfortunately, we don't see a clear elbow, so we'll just use 10.
+```{r warning=FALSE, echo=FALSE}
+#--Kmeans++ w/ PCA
+
+# Iterate through the K's for an elbow
 k_grid_social = seq(2, 25, by = 1)
 N = nrow(social)
-SSE_grid_social = foreach(k = k_grid_social, .combine = 'c') %dopar% {
+SSE_grid_social = foreach(k = k_grid_social, .combine = 'c') %do% {
   cluster_kp_social = kmeanspp(pc_social$x, k, nstart=25)
   cluster_kp_social$tot.withinss
 }
 plot(SSE_grid_social)
 # No clear "elbow"
-# Lets choose k=6
-# Gap statistic takes way too long " stage steps exceeded maximum "
-k_clusters = 6
-cluster_kp_social = kmeanspp(pc_social$x, k = k_clusters, nstart = 25, iter.max = 1000)
-plot(comps[,1:5], col = cluster_kp_social$cluster, pch=16, cex=0.3)
-
-c1_kp = social[which(cluster_kp_social$cluster == 1),]
-c2_kp = social[which(cluster_kp_social$cluster == 2),]
+# Lets choose k=10
 ```
 
-```{r warning=FALSE, include=FALSE}
-summary(c1_kp)
-summary(c2_kp)
-```
-
+Recreating graphs with clustering, using different colors for the different clusters.
 ```{r warning=FALSE, echo=FALSE}
-## We have some clusters but how should we compare??
-barplot(height = colSums(c1_kp[,-1]))
-barplot(height = colSums(c2_kp[,-1]))
+# Gap statistic takes way too long " stage steps exceeded maximum
+cluster_kp_social = kmeanspp(pc_social$x, k = 10, nstart = 25, iter.max = 1000)
+# Prior graph now with clustering
+pairs(comps_social[,1:5], col = cluster_kp_social$cluster, pch=16, cex=0.3)
+```
 
-# Wordcloud
-wordclouds_df <- foreach(i = 1:k_clusters, .combine = 'rbind') %do% {
-  ci = social[which(cluster_kp_social$cluster == i),]
-  colSums(ci[,-1])
+Here we are creating word clouds to help visualize the associations between twitter topics.
+Using these we can see a clear association between fitness, cooking, and travel with photosharing. 
+Additionally we see a clear association between news and politics. Unfortunately, this is a very confusing way to present data, and levels of association are unclear.
+```{r warning=FALSE, echo=FALSE}
+#--Wordclouds
+wordclouds_df <- foreach(i = 1:10, .combine = 'cbind') %do% {
+  ci = X_social[which(cluster_kp_social$cluster == i),]
+  colSums(ci)
 }
-wordclouds_df <- t(wordclouds_df)
-wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,1]))
-# w/o chatter
-wordclouds_nochat_df <- wordclouds_df[-1,]
-wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,1]))
-wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,2]))
-wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,3]))
-wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,4]))
-wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,5]))
-wordcloud2(data.frame(c(rownames(wordclouds_nochat_df)), wordclouds_nochat_df[,6]))
+wordclouds_df <- data.frame(list(rownames(wordclouds_df), wordclouds_df))
+colnames(wordclouds_df) <- c("word", 1:10) 
+
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,2]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,2]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,3]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,4]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,5]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,6]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,7]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,8]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,9]), minRotation = -pi/2, maxRotation = -pi/2)
+wordcloud2(data.frame(c(rownames(wordclouds_df)), wordclouds_df[,10]), minRotation = -pi/2, maxRotation = -pi/2)
+
+#-----------------------------------------------------------------#
 ```
 
+Here we have decided to use hierarchical clustering and are creating a dendrogram. This makes it much easier to visualize the level of association between topics on twitter. Here we see that phtosharing is most closely related to health and nutrition, but not particularly closely related to the other topics. 
 ```{r warning=FALSE, echo=FALSE}
-#################################################################
-
 ## Heirarchical Clustering ##
 # Pairwise distance matrix using the distance function
-distance_between_social = dist(pc_social$x, method='euclidean')
-```
-
-```{r warning=FALSE, echo=FALSE}
-# Hierarchical clustering
-# Complete seems to have break up the clusters quicker
-cluster_hier_social = hclust(distance_between_social, method='complete')
+# Dont want to cluster the x's but the centers
+distance_between_social = dist(pc_social$center, method='euclidean')
+# Use the average method
+cluster_hier_social = hclust(distance_between_social, method='average')
 # Dendrogram
-```
-
-```{r warning=FALSE, echo=FALSE}
 plot(cluster_hier_social)
-# Problem dendogram is highly homogeneous
-# Arbitrarily choose k 
+# Rectangle around 10 clusters
+rect.hclust(cluster_hier_social, k=10, border = 2:6)
+# Should focus on these groups
 ```
 
-```{r warning=FALSE, echo=FALSE}
-hcluster_social = cutree(cluster_hier_social, k=10)
-```
-
-```{r warning=FALSE, echo=FALSE}
-summary(factor(hcluster_social))
-```
+Here we block off branches of the tree to see the 10 groups with the closest associations. Our suggestion would be to look at these associations, and within the groups, determine which groups are most popular among twitter users in the sample. These should be the topics that are targeted for marketing campaigns. Looking back at what we looked into in lines 18-24, the health-nutrition/photo sharing cluster would be a very good one to target, with average number of tweets among users who are tweeting of roughly 5 and 3.4. Another good suggestion would be to target the cluster with outdoor because this is a very large cluster that would have a lot of tangential effects (i.e. target outdoor would likely get picked up by users tweeting about school, sports, music, etc)
 
 ##Question 3
+Just data manipulation
 ```{r warning=FALSE, echo=FALSE, include=FALSE}
 library(arules)
 library(arulesViz)
@@ -239,42 +378,42 @@ g = lapply(g, unique)
 g_trans = as(g, "transactions")
 ```
 
+First, we set our threshold.
 ```{r warning=FALSE, echo=FALSE}
-summary(g_trans)
-
-support_val = .001
+# Not sure what values to use here ~arbitrary
+support_val = .005
 conf_val = .05
-maxlen_val = 5
+maxlen_val = 10
+```
 
+Then, we determine our rules.
+```{r warning=FALSE, echo=FALSE}
 g_rules = apriori(g_trans,
                   parameter = list(support = support_val, 
                                    confidence = conf_val,
                                    maxlen = maxlen_val))
 ```
 
-```{r warning=FALSE, echo=FALSE, include=FALSE}
-inspect(g_rules)
+Here, we display the rules which were discovered to have a lift over 2.
+```{r warning=FALSE, echo=FALSE}
 # Look at a subset
 inspect(subset(g_rules, subset=lift > 2))
 ```
 
-```{r warning=FALSE, echo=TRUE}
+We plot our association rules.
+```{r warning=FALSE, echo=FALSE}
 # Plots
-plot(g_rules)
-#Other axis
 plot(g_rules, measure = c("support", "lift"), shading = "confidence")
-# two key plot
-plot(g_rules, method='two-key plot')
+# Graph vis
+plot(head(g_rules, 60, by='lift'), method='graph')
 
-# Look at key subsets
-inspect(subset(g_rules, support > 0.03))
-inspect(subset(g_rules, confidence > 0.3))
-
-# graph visualization
-sub1 = subset(g_rules, subset=confidence>0.15, support > 0.001)
-summary(sub1)
-plot(head(sub1, 10, by='lift'), method='paracoord')
-
-####### Association rules
-saveAsGraph(head(g_rules, n = 1000, by = "lift"), file = "g_rules.graphml")
+####### Save a subset
+sub1 = subset(g_rules, subset=confidence>0.2, support > 0.1, lift>2)
+saveAsGraph(sub1, file = "g_rules.graphml")
 ```
+
+Conclusion: For this problem, we decided to set a support of .005, confidence of .05, and a max length of 10. The support decided upon because of the size of the dataset and the tremendous variation in items available in a grocery store. If we had a smaller sample, or had fewer options, this would have been higher, just to get more data, but we felt comfortable with this level. We set a confidence level of 5% because again, there are so many options available in a grocery store we wanted to capture any meaningful associations possible. Additionally, we felt that if 5% of people who purchased one item were also purchasing another item, it would provide actionable insight, and an opportunity to exploit a non-zero relationship (i.e. we felt that this was likely a natural association and we could likely nudge marginal consumers toward buying more items). The length was limited to 10 because it seems unlikely that we would be able to present meaningful associations with more than 10 items because at that point it would be difficult to follow all of the items being associated.  
+There are a series of interesting associations we have found. Among the strongest are between pip fruits and tropical fruits, onions and root vegetables, and beef and root vegetables. All of these associations also enjoy a significant amount of reciprocity. That is, not only does purchasing Item A increase the likelihood of purchasing Item B, but Item B has the same effect on Item A. Some of these associations are fairly intuitive as virtually every roast beef recipe calls for onions and carrots, which would be classified as a root vegetable. Perhaps less intuitive are the associations between fruits, as those are rarely used as ingredients together, and are instead, at least in American culture, typically eaten as stand alone foods. 
+*support_val = .005
+*conf_val = .05
+*maxlen_val = 10
