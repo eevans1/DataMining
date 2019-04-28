@@ -107,7 +107,6 @@ Recreating graphs with clustering, using different colors for the different clus
 Here we are creating word clouds to help visualize the associations between twitter topics. Using these we can see a clear association between fitness, cooking, and travel with photosharing. Additionally we see a clear association between news and politics. Unfortunately, this is a very confusing way to present data, and levels of association are unclear. 
 
 ![wordcloud1](https://user-images.githubusercontent.com/47119190/56870323-5cf3ac80-69d3-11e9-81b8-0c81f5e9ae55.PNG)
-![wordcloud2](https://user-images.githubusercontent.com/47119190/56870326-654be780-69d3-11e9-99a6-f92de8fd4b36.PNG)
 ![wordcloud3](https://user-images.githubusercontent.com/47119190/56870327-6846d800-69d3-11e9-9a44-7d0d3023dfa1.PNG)
 ![wordcloud4](https://user-images.githubusercontent.com/47119190/56870328-69780500-69d3-11e9-9247-883d556d7b0c.PNG)
 ![wordcloud5](https://user-images.githubusercontent.com/47119190/56870329-6aa93200-69d3-11e9-9e47-c1b6920abd1a.PNG)
@@ -116,6 +115,7 @@ Here we are creating word clouds to help visualize the associations between twit
 ![wordcloud8](https://user-images.githubusercontent.com/47119190/56870332-70067c80-69d3-11e9-9824-ee854bb88547.PNG)
 ![wordcloud9](https://user-images.githubusercontent.com/47119190/56870336-785eb780-69d3-11e9-8d73-7d2f56184a99.PNG)
 ![wordcloud10](https://user-images.githubusercontent.com/47119190/56870338-83194c80-69d3-11e9-9f99-20e344885dc6.PNG)
+![wordcloud11](https://user-images.githubusercontent.com/47119190/56870374-1f435380-69d4-11e9-967f-d492f0ce9588.PNG)
 
 Here we have decided to use hierarchical clustering and are creating a dendrogram. This makes it much easier to visualize the level of association between topics on twitter. Here we see that phtosharing is most closely related to health and nutrition, but not particularly closely related to the other topics. ![](Epsilon_Exercise4_files/figure-markdown_github/unnamed-chunk-20-1.png)
 
