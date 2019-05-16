@@ -1,0 +1,33 @@
+## Three Star::
+
+BasesWalked:Games
+Position2B:StrikeOuts   
+Position3B:StrikeOuts     
+PositionC:StrikeOuts           
+PositionDH:StrikeOuts      
+PositionLF:StrikeOuts           
+GroundDouble:Age                
+StolenBases:BasesWalked         
+PositionC:Runs                
+Age:IntBasesOnBalls              
+VetStatusArb 1:IntBasesOnBalls 
+Hits:Age                         
+Age:RBI                          
+
+## Two Star::
+
+VetStatusArb 2:Games
+Position2B:Age               
+VetStatusArb 2:Age               
+VetStatusArb 3:Age            
+VetStatusPre-Arb:Triples    
+PositionRF:StrikeOuts          
+PositionSS:StrikeOuts          
+PositionLF:Runs                
+PositionRF:Runs                  
+PositionDH:Doubles              
+PositionRF:Doubles             
+VetStatusArb 2:IntBasesOnBalls 
+VetStatusArb 3:IntBasesOnBalls    
+Runs:Doubles                    
+StrikeOuts:BasesWalked

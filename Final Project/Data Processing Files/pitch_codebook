@@ -1,0 +1,76 @@
+Also view explanations by holding mouse over column headers
+Rk -- Rank
+This is a count of the rows from top to bottom.
+It is recalculated following the sorting of a column.
+Name -- Player Name
+Bold can mean player is active for this team
+or player has appeared in MLB
+* means LHP or LHB,
+# means switch hitter,
++ can mean HOFer.
+Age -- Player’s age at midnight of June 30th of that year
+Lg -- League
+AL - American League (1901-present)
+NL - National League (1876-present)
+AA - American Association (1882-1891)
+UA - Union Association (1884)
+PL - Players League (1890)
+FL - Federal League (1914-1915)
+NA - National Association (1871-1875)
+W -- Wins
+L -- Losses
+W-L% -- Win-Loss Percentage
+W / (W + L)
+For players, leaders need one decision for every ten team games.
+For managers, minimum to qualify for leading is 320 games.
+ERA -- 9 * ER / IP
+For recent years, leaders need 1 IP
+per team game played.
+Bold indicates lowest ERA using current stats
+Gold means awarded ERA title at end of year.
+G -- Games Played or Pitched
+GS -- Games Started
+GF -- Games Finished
+CG -- Complete Game
+SHO -- Shutouts
+No runs allowed and a complete game.
+SV -- Saves
+IP -- Innings Pitched
+H -- Hits/Hits Allowed
+R -- Runs Scored/Allowed
+ER -- Earned Runs Allowed
+HR -- Home Runs Hit/Allowed
+BB -- Bases on Balls/Walks
+IBB -- Intentional Bases on Balls
+First tracked in 1955.
+SO -- Strikeouts
+HBP -- Times Hit by a Pitch.
+BK -- Balks
+WP -- Wild Pitches
+BF -- Batters Faced
+ERA+ -- ERA+
+100*[lgERA/ERA]
+Adjusted to the player’s ballpark(s).
+FIP -- Fielding Independent Pitching
+this stat measures a pitcher's effectiveness at preventing HR, BB, HBP and causing SO
+(13*HR + 3*(BB+HBP) - 2*SO)/IP + Constantlg
+The constant is set so that each season MLB average FIP is the same as the MLB avg ERA
+WHIP -- (BB + H)/IP
+For recent years, leaders need 1 IP
+per team game played
+H9 -- 9 x H / IP
+For recent years, leaders need 1 IP
+per team game played
+HR9 -- 9 x HR / IP
+For recent years, leaders need 1 IP
+per team game played
+BB9 -- 9 x BB / IP
+For recent years, leaders need 1 IP
+per team game played
+SO9 -- 9 x SO / IP
+For recent years, leaders need 1 IP
+per team game played
+SO/W -- SO/W or SO/BB
+For recent years, pitching leaders need 1 IP
+per team game played.
+No batting leaders computed.

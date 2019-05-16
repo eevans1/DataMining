@@ -1,0 +1,17 @@
+VetStatusArb 1:StrikeOuts          -87532      20857  -4.197 3.13e-05 ***
+VetStatusPre-Arb:StrikeOuts        -89865      13942  -6.446 2.42e-10 ***
+VetStatusArb 1:BasesWalk           163042      44265   3.683 0.000252 ***
+VetStatusPre-Arb:BasesWalk         138548      33769   4.103 4.66e-05 ***
+
+
+VetStatusArb 2:StrikeOuts          -70596      24085  -2.931 0.003511 ** 
+VetStatusPre-Arb:InningsPitched     56063      18113   3.095 0.002062 ** 
+ERA:BasesWalk                       41861      14472   2.893 0.003964 ** 
+VetStatusArb 2:BasesWalk           143631      45155   3.181 0.001547 ** 
+PositionSP:Age                     405997     142847   2.842 0.004638 ** 
+VetStatusPre-Arb:Age               333107     124726   2.671 0.007781 ** 
+BasesWalk:Age                       10096       3550   2.844 0.004610 ** 
+ERA:Age                            205613      66168   3.107 0.001979 ** 
+
+VetStatus:StrikeOuts + VetStatus:BasesWalk + VetStatus:InningsPitched + ERA:BasesWalk + Position:Age + VetStatus:Age + BasesWalk:Age + ERA:Age
+

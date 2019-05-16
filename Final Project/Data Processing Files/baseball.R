@@ -1,32 +1,37 @@
 library(LICORS)
 library(randomForest)
-library(gamlr)
 library(foreach)
+library(gamlr)
+library(ggplot2)
 
 # Initial df read in 
 baseball <- read.csv("C:/Users/suber/iCloudDrive/Documents/UT Austin/2019 Spring/DataScience/FinalProject/baseball.csv")
 baseball <- read.csv("~/Documents/UT Austin/2019 Spring/DataScience/FinalProject/baseball.csv")
-# Rename cols for clarity
-colnames(baseball) <- c("N", "Year", "Name", "TeamAbbr", "Team", "Position", "VetStatus", "Salary", 
-                        "SalaryPerc", "Rank", "PlayerCode", "Age", "League", "Games", 
-                        "PlateApp", "AtBats", "Runs","Hits", "Doubles", "Triples", "HomeRuns",
-                        "RBI", "StolenBases", "Caught", "BasesWalked", "StrikeOuts", "BattingAvg",
-                        "OnBasePerc", "SluggPerc", "OnBaseSluggPerc", "OnBaseSluggPercNorm",
-                        "TotalBases", "GroundDouble", "HitByPitch", "SacHit", "SacFlies", "IntBasesOnBalls" )
+
 # Start focus on batter statistics in National League
 # Drop AL, Pitchers, Plate Appearances < 200
 baseball <- subset(baseball, League == "NL")
 baseball <- subset(baseball, 
                    Position != "P" &
-                   Position != "SP" &
-                   Position != "RP" &
-                   Position != "RP/CL" &
-                   Position != "CL")
+                     Position != "SP" &
+                     Position != "RP" &
+                     Position != "RP/CL" &
+                     Position != "CL")
 baseball <- subset(baseball, 
                    PlateApp >= 200)
 
 # Base df with complete cases (needed for PCA & Clustering)
 baseballcc <- baseball[complete.cases(baseball),]
+
+# Train test split we will use to get out of sample RMSE
+N <- nrow(baseballcc)
+train_perc <- 0.8
+N_train <- floor(train_perc*N)
+N_test <- N - N_train
+train_ind <- sort(sample.int(N, N_train, replace=FALSE))
+b_train <- baseballcc[train_ind,]
+b_test <- baseballcc[-train_ind,]
+
 
 #-------------------
 #-Linear Models
@@ -34,12 +39,11 @@ baseballcc <- baseball[complete.cases(baseball),]
 # Key objective is to find which statistics best explain player salary (should probably look at wins......)
 # If we assume teams are efficient and are naturally allocating salary according to who will contribute more to wins....
 
-
 # Basic model
 lm1 <- lm(Salary ~ Age + AtBats + Runs + Hits + HomeRuns + StrikeOuts + Doubles + Triples + BattingAvg + StolenBases + BasesWalked, data = baseball)
 summary(lm1)
 
-# (Almost) Every fucking thing
+# (Almost) Every thing
 lm2 <- lm(Salary ~ Age + Position + AtBats + Runs + Hits + HomeRuns + RBI + StrikeOuts + BattingAvg + Doubles + Triples + StolenBases + Caught + BasesWalked +
             OnBasePerc + SluggPerc + OnBaseSluggPerc + OnBaseSluggPercNorm + TotalBases + GroundDouble + HitByPitch + SacHit + SacFlies + IntBasesOnBalls, data = baseball)
 
@@ -48,10 +52,10 @@ lm3 <- lm(Salary ~ . -N -Year -Name -Position -TeamAbbr -Team -PlayerCode -Leagu
 
 #-Step function
 # We seek to find a local AIC max based on our original model and our scope terms
-lm_step <- step(lm1, scope=~((. + Caught + BasesWalked +
+lm_step_b <- step(lm1, scope=~((. + Caught + BasesWalked +
                                OnBasePerc + SluggPerc + OnBaseSluggPerc + OnBaseSluggPercNorm +
                              TotalBases + GroundDouble + HitByPitch + SacHit + SacFlies + IntBasesOnBalls)^2))
-summary(lm_step)
+summary(lm_step_b)
 
 # The Lasso
 # Lets see what you do
@@ -60,11 +64,33 @@ scx <- sparse.model.matrix(Salary ~ Age + AtBats + Runs + Hits + HomeRuns + RBI 
 scy <- baseballcc$Salary
 sclasso <- gamlr(scx, scy)
 
+# From our linear models we choose our variables to use in our clustering
+# We arrive at something like this
+lm4 <- lm(Salary ~ VetInd + PlateApp + Caught+ GroundDouble + Runs 
+          + Hits + StrikeOuts + Doubles + Triples + HomeRuns + StolenBases + BasesWalked +BasesWalked:Games 
+          + GroundDouble:Age + StolenBases:BasesWalked + Age:IntBasesOnBalls 
+          + VetInd:IntBasesOnBalls + Hits:Age + Age:RBI + VetInd:Games +
+          + VetInd:Age + VetStatus:Triples + VetInd:IntBasesOnBalls + Runs:Doubles 
+          + StrikeOuts:BasesWalked, data = baseball)
+
+lm4 <- lm(Salary ~ Age + PlateApp + Caught +  GroundDouble +  Runs +  Hits +  StrikeOuts +
+          Doubles +  Triples +  HomeRuns + StolenBases + IntBasesOnBalls + VetInd + RBI + Games + BasesWalked + BaseGame + GDAge + SBWalk + AgeBoB + VetBoB + HitAge + 
+          AgeRBI + VetGames + VetAge + VetTriples + RunDoub + SOWalked, data = baseball)
+
+yhat_linear_test_b <- predict(lm4, b_test)
+rmse_linear_b <- sqrt(mean((b_test$Salary - yhat_linear_test)^2))
+
 #---------
 #-Want to choose variables that are critical in determining our y
 # df with just stat attributes
 b <- data.frame(subset(baseballcc, select=c(Age, AtBats, Runs, Hits, HomeRuns, StrikeOuts,
                                             Doubles, Triples, BattingAvg, StolenBases, BasesWalked)))
+
+# These were deemed to be the important factors
+b <- data.frame(subset(baseballcc, select=c(Age, PlateApp, Caught,  GroundDouble,  Runs,  Hits,  StrikeOuts,
+  Doubles,  Triples,  HomeRuns, StolenBases, IntBasesOnBalls, VetInd, RBI, Games, BasesWalked, BaseGame, GDAge, SBWalk, AgeBoB, VetBoB, HitAge, 
+  AgeRBI, VetGames, VetAge, VetTriples, RunDoub, SOWalked)))
+
 # Scale for funsies
 b_scale <- data.frame(scale(b, center = TRUE, scale = TRUE))
 
@@ -77,10 +103,13 @@ b_scale <- data.frame(scale(b, center = TRUE, scale = TRUE))
 
 # Same as prior data frames but focusing on 2018 
 baseball_2018 <- subset(baseballcc, Year=="2018")
-factors <- 
+
 b_2018 <- data.frame(subset(baseball_2018, 
                             select = c(Age, AtBats, Runs, Hits, HomeRuns, 
-                                       StrikeOuts,Doubles, Triples, BattingAvg, StolenBases, BasesWalked)))
+                                       StrikeOuts,Doubles, Triples, BattingAvg, StolenBases, BasesWalked, VetInd)))
+b_2018 <- data.frame(subset(baseball_2018, select=c(Age, PlateApp, Caught,  GroundDouble,  Runs,  Hits,  StrikeOuts,
+                                            Doubles,  Triples,  HomeRuns, StolenBases, IntBasesOnBalls, VetInd, RBI, Games, BasesWalked, BaseGame, GDAge, SBWalk, AgeBoB, VetBoB, HitAge, 
+                                            AgeRBI, VetGames, VetAge, VetTriples, RunDoub, SOWalked)))
 b_2018_scale <- data.frame(scale(b_2018, center = TRUE, scale = TRUE))
 
 #-PCA - No necesario - 
@@ -91,38 +120,40 @@ summary(pc_baseball)
 #-Kmeans++
 # Buscar la solucion optima
 # Aproximamente diecisiete clusteros 
-k_grid_bat = seq(2, 25, by = 1)
-N = nrow(b_2018_scale)
-SSE_grid_bat = foreach(k = k_grid_bat, .combine = 'c') %do% {
-  cluster_kp_bat = kmeanspp(b_2018_scale, k, nstart=25)
-  cluster_kp_bat$tot.withinss
-}
-plot(SSE_grid_bat)
+# k_grid_bat = seq(2, 25, by = 1)
+# N = nrow(b_2018_scale)
+# SSE_grid_bat = foreach(k = k_grid_bat, .combine = 'c') %do% {
+#   cluster_kp_bat = kmeanspp(b_2018_scale, k, nstart=25)
+#   cluster_kp_bat$tot.withinss
+# }
+# plot(SSE_grid_bat)
 # Maybe baby like 17??
-clustkp_bat = kmeanspp(b_2018_scale, k = 17, nstart = 50, iter.max = 1000)
+clustkp_bat = kmeanspp(b_2018_scale, k = 25, nstart = 50, iter.max = 1000)
+# Put each palyer in their respective cluster
+baseball_2018$KCluster <- clustkp_bat$cluster
+
 # Now we observe an uninterpretable plot :')
 # I cri evri tim
 plot(b_2018_scale, col = clustkp_bat$cluster, pch=16, cex=0.3)
 
 # Lets focus on a single player
-baseball_2018$KCluster <- clustkp_bat$cluster
 key_player = "AJPollock"
 key_cluster = baseball_2018[which(baseball_2018$Name == key_player),]$KCluster
 players_Kcluster1 <- subset(baseball_2018, KCluster == key_cluster)
-el_cheapo_k <- players_Kcluster1[which(players_Kcluster1$Salary == min(players_Kcluster1$Salary)),]
-
+cheapest_player_b <- clustkp_bat[which(players_Kcluster1$Salary == min(players_Kcluster1$Salary)),]
+cheapest_player_b
 # Lets repeat this for a whole teams roster
 # We are not accounting for what position they play
 # Maybe we should maybe we shouldnt, Baseball suxx eitherway
-
 # Focus on a single team in NL
-key_team = "ATL"
-key_roster = subset(baseball_2018, TeamAbbr == key_team)$Name
-replace_roster <- data.frame(matrix(ncol=3,nrow=length(key_roster)))
+key_team = "MIA"
+key_roster = subset(baseball_2018, TeamAbbr == key_team)
+key_roster_names = key_roster$Name
+replace_roster <- data.frame(matrix(ncol=3,nrow=length(key_roster_names)))
 colnames(replace_roster) <- c("Old","New","NewSamePos")
-for(n in 1:length(key_roster)) {
+for(n in 1:length(key_roster_names)) {
   # Get the player on the roster
-  key_p = key_roster[n]
+  key_p = key_roster_names[n]
   replace_roster[n,1] <- as.character(key_p)
   # Get which cluster they are in
   key_cl = baseball_2018[which(baseball_2018$Name == key_p),]$KCluster
@@ -155,9 +186,25 @@ for(n in 1:length(key_roster)) {
     } else(replace_roster[n,3] <- as.character(same_pos[1]))
   }
 }
-
+replace_roster
 #---------------------------
-# Cluster for each postion?
+# Look at error terms based on our linear model
+roster_pred <- predict(lm4, key_roster)
+key_roster$Error <- key_roster$Salary - roster_pred
+p1 <- ggplot(data=key_roster, aes(x=Name, y=Error)) +
+  geom_bar(stat="identity", color = key_roster$KCluster) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p1
+
+#-----------------------------
+# Agggregate Team and Look at Team Errors
+league_pred <- predict(lm4, baseball_2018)
+baseball_2018$Error <- baseball_2018$Salary - league_pred
+team_error <- aggregate(Error ~ TeamAbbr, baseball_2018, sum)
+p2 <- ggplot(data=team_error, aes(x=TeamAbbr, y=Error)) +
+  geom_bar(stat="identity", color = "blue") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p2
 
 
 #----------------------------
@@ -183,18 +230,36 @@ players_Hcluster1 <- subset(baseball_2018, HCluster == key_cluster)
 #-- Non-linear models
 #-Trees
 # Prolly just good for prediction
-N <- nrow(baseballcc)
-train_perc <- 0.8
-N_train <- floor(train_perc*N)
-N_test <- N - N_train
-train_ind <- sort(sample.int(N, N_train, replace=FALSE))
-b_train <- baseballcc[train_ind,]
-b_test <- baseballcc[-train_ind,]
 
 #- Bagging
-forest <- randomForest(Salary ~ . -N -Year -Name -Position -TeamAbbr -Team -PlayerCode -League -Rank, 
-                       mtry=10, nTree=100, data = b_train)
+# Using the linear model from before
+forest1 <- randomForest(Salary ~ Age + PlateApp + Caught +  GroundDouble +  Runs +  Hits +  StrikeOuts +
+                         Doubles +  Triples +  HomeRuns + StolenBases + IntBasesOnBalls + VetInd + RBI + Games + BasesWalked + BaseGame + GDAge + SBWalk + AgeBoB + VetBoB + HitAge + 
+                         AgeRBI + VetGames + VetAge + VetTriples + RunDoub + SOWalked, mtry=15, nTree=100, data = baseball)
 
-yhat_forest_test <- predict(forest, b_test)
-rmse_forest <- sqrt(mean((b_test$Salary - yhat_forest_test)^2))
-rmse_forest
+yhat_forest_test <- predict(forest1, b_test)
+rmse_forest_b <- sqrt(mean((b_test$Salary - yhat_forest_test)^2))
+
+matrix( c("Linear", "Tree", rmse_linear_b, rmse_forest_b), nrow = 2, ncol = 2)
+
+
+
+#--------------------------
+# Look at error terms based on our linear model
+roster_pred <- predict(forest1, key_roster)
+key_roster$Error <- key_roster$Salary - roster_pred
+p3 <- ggplot(data=key_roster, aes(x=Name, y=Error)) +
+  geom_bar(stat="identity", color = key_roster$KCluster) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p3
+
+#-----------------------------
+# Agggregate Team and Look at Team Errors
+league_pred <- predict(forest1, baseball_2018)
+baseball_2018$Error <- baseball_2018$Salary - league_pred
+team_error <- aggregate(Error ~ TeamAbbr, baseball_2018, sum)
+p4 <- ggplot(data=team_error, aes(x=TeamAbbr, y=Error)) +
+  geom_bar(stat="identity", color = "yellow") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+p4
+
