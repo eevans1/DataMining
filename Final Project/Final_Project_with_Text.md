@@ -146,4 +146,5 @@ We feel that a very natural extension to this question would deal with the money
 
 **Appendix 1.** ![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
-**Appendix 2.** ![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-1.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-2.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-3.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-4.png)
+**Appendix 2.**![image](https://user-images.githubusercontent.com/47119190/57885052-ba6b6400-77ef-11e9-8a53-dda3ccd1a74a.png)
+![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-1.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-2.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-3.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-4.png)
