@@ -9,7 +9,7 @@ This paper explores the abundance of baseball statistics in order to create a me
 
 ### II. Introduction
 
-Over the last few decades, Major League Baseball (MLB) has seen a paradigm shift in terms of player evaluation. No longer were teams looking at basic statistics and using outdated and non-sensical beliefs about player's personal lives to project their success at the highest levels, but instead, team General Managers were taking a quantitative approach to determine which players are most likely to impact games in a meaningful and positive way for their teams. This shift in evaluation has coincided with dwindling interest nationwide in the sport, with more competition to pay extraordinary amounts to top-tier players within the league, as well as with luxury taxes on team payrolls that exceed a certain threshold, it is more important than ever to be pragmatic when estimating a player's value to the team.
+Over the last few decades, Major League Baseball (MLB) has seen a paradigm shift in terms of player evaluation. No longer were teams looking at basic statistics and using outdated and non-sensical beliefs about player's personal lives to project their success at the highest levels, but instead, team General Managers were taking a quantitative approach to determine which players are most likely to impact games in a meaningful and positive way for their teams. This shift in evaluation has coincided with dwindling interest nationwide in the sport and more competition to pay extraordinary amounts to top-tier players within the league, as well as with luxury taxes on team payrolls that exceed a certain threshold. These combined effects have made it more important than ever to be pragmatic when estimating a player's value to the team.
 
 With this in mind, we decided to try our hand at building a team which we believe would be a viable playoff contender, and to do so for less money. To do this, we developed a system which, along with a few defensible assumptions, will lead to a team which should perform comparably to many of the top teams from the 2018 season, and will cost less than the teams they are replacing. First, we wanted to identify which statistics seem to have the biggest impact on salaries in the league. We wanted to use a linear model to find the most significant coefficients, which we would then use to cluster players around their most similar potential replacement. This relies on the assumptions that teams are generally proficient at valuing a player, and that salaries are derived from the same performance metrics which impact wins. Once we identified the statistics which matter the most, we used them to find the most similar players to each other. Once we had these clusters, we identified the lowest paid player in each cluster. Using the lowest paid player in each cluster, we were able to build a team which is statistically very similar to any given team in the league and which costs no more than the original team.
 
@@ -27,7 +27,7 @@ After this, we redefined the columns of our dataset to improve interpretability 
 
 Now that the data has been pre-processed, we need to determine which statistics have a statistically significant relationship with salary. We feel that at this stage, it is sensible to start with linear modelling in order to maintain ease of interpretation at first while identifying critical variables, and later we will use random forests in order to more strongly predict out-of-sample salaries.
 
-We designated a baseline linear model with salary as a function of position, age, plate appearances (PA), caught stealing (CS), grounding into double play (GIDP), runs, hits, strikeouts, doubles, triples, homeruns, stolen bases (SB), and walks. Once we identified the baseline, we used a step function to identify some of the more important interaction terms. In the end we identified several interactions which had major impacts on salary. Unfortunately, one of the independent variables which was most common was "age". On first look, it seems that age might be relevant, as younger players haven't had a chance to hone their skills or to prove themselves worthy of higher pay. On further inspection, however, we realize that age is largely just capturing the effect of being on a rookie contract. To overcome this apparent omitted variable and get better results, we setup and ran a web scraper to track down information on contract status, which indicates if someone is on their rookie contract, in arbitration, or a veteran (negotiated a contract at least once). We decided to leave age in as a control variable as well, because it should still be capturing the effect of a player being on the back end of his career. Once we had this data coupled to the appropriate players, we ran the same models, this time using VetStatus in addition to age. This gave us better results, and we feel that it is a more accurate representation of the real world.
+We designated a baseline linear model with salary as a function of position, age, plate appearances (PA), caught stealing (CS), grounding into double play (GIDP), runs, hits, strikeouts, doubles, triples, homeruns, stolen bases (SB), and walks. Once we identified the baseline, we used a step function to identify some of the more important interaction terms. In the end we identified several interactions which had major impacts on salary. Unfortunately, one of the independent variables which was most common was "age." On first look, it seems that age might be relevant, as younger players haven't had a chance to hone their skills or to prove themselves worthy of higher pay. On further inspection, however, we realize that age is largely just capturing the effect of being on a rookie contract. To overcome this apparent omitted variable and get better results, we setup and ran a web scraper to track down information on contract status, which indicates if someone is on their rookie contract, in arbitration, or a veteran (negotiated a contract at least once). We decided to leave age in as a control variable as well, because it should still be capturing the effect of a player being on the back end of his career. Once we had this data coupled to the appropriate players, we ran the same models, this time using VetStatus in addition to age. This gave us better results, and we feel that it is a more accurate representation of the real world.
 
     ## 
     ## Call:
@@ -93,7 +93,9 @@ After having done this for position players, we perform roughly the same process
 
 ### IV. Results
 
-We found that it is very possible to build high-performing teams with a much lower salary than many of the top teams. Using the random forest, we found the following: For position players:
+We found that it is very possible to build high-performing teams with a much lower salary than many of the top teams. Using k-means clustering, we found the following:
+
+For position players:
 
 | Old               | New            | NewSamePos        |
 |-------------------|----------------|-------------------|
@@ -120,13 +122,13 @@ For pitchers:
 | Ross Stripling  | John Grant      |
 | Walker Buehler  | Derek Rodriguez |
 
-Additionally, we found that the Dodgers are overpaying their position players in net but actually have more players underpaid than overpaid. The Dodgers are very close to our expectations in terms of pitcher salaries. The only exception here is Clayton Kershaw who is, according to our models, way overpaid. (Charts for linear model are in appendix 2)
+Additionally, using random forests, we found that the Dodgers are overpaying their position players in net but actually have more players underpaid than overpaid. The Dodgers are very close to our expectations in terms of pitcher salaries. The only exception here is Clayton Kershaw who is, according to our models, way overpaid. (Charts for linear model are in appendix 2)
 
 ![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 ![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
-Finally, we see that when we use random forest, many teams overpay position players, however, for pitchers, there is a much more even distribution of payments. (Charts for linear model are in app 2)
+Finally, we see that when we use random forest, many teams overpay position players, however, for pitchers, there is a much more even distribution of payments. (Charts for linear model are in appendix 2)
 
 ![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
@@ -142,9 +144,8 @@ Additionally, we determined that many baseball teams tend to overpay for positio
 
 We feel that a very natural extension to this question would deal with the money-making potential of each player. Clearly, baseball teams are not only built to compete for post-season play but are also designed to return some sort of profit to owners, and unfortunately, those profits are not perfectly tied to on-field performance. If we had access to data concerning jersey sales, ticket and concession revenues, and media deals, we could, through various statistical and econometric methods, try to identify individual effects on team revenue.
 
-### VI Appendices
+### VI. Appendices
 
 **Appendix 1.** ![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
-**Appendix 2.**![image](https://user-images.githubusercontent.com/47119190/57885052-ba6b6400-77ef-11e9-8a53-dda3ccd1a74a.png)
-![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-1.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-2.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-3.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-4.png)
+**Appendix 2.** ![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-1.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-2.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-3.png)![](Final_Project_with_Text_files/figure-markdown_github/unnamed-chunk-16-4.png)
