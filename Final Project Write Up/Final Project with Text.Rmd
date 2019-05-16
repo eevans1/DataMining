@@ -1,6 +1,6 @@
 ---
 title: "Final Project"
-author: Wyatt Allen, Elijah Evans, David Ford, Patrick Scovel --
+author: Wyatt Allen, Elijah Evans, David Ford, P. Allen Scovel --
 always_allow_html: yes
 output: github_document
 date: "`r format(Sys.time(), '%d %B %Y')`"
@@ -21,9 +21,9 @@ With this in mind, we decided to try our hand at building a team which we believ
 ###III. Methods
 The first step was to gather and pre-process the data. We gathered our data from:  
 
-*www.Baseball-Reference.com to gather performance metrics for the entire league.
+* www.Baseball-Reference.com to gather performance metrics for the entire league.
 
-*www.spotrac.com to gather salary information as well as information on whether the player is on their rookie contract, currently renegotiating their contract, or a veteran (second or later contract) via a web scraper  
+* www.spotrac.com to gather salary information as well as information on whether the player is on their rookie contract, currently renegotiating their contract, or a veteran (second or later contract) via a web scraper  
 
 Once we had the data, we needed to organize it in a manner which would allow us to glean meaningful insights. The first thing we wanted to do was to work exclusively with the National League (NL). We chose the NL because the existence of designated hitters in the American League fundamentally changes the game, and we want to treat it differently because of this impact. Next, we wanted to discard players who are not seeing much playing time in the league. This is a very common technique when analyzing baseball data, as it is very easy to see skewed results from players without much activity in the league. To that end, we decided to drop all position players (i.e. not pitchers) from the data set who had fewer than 200 plate appearances. We also dropped all pitchers with fewer than 100 innings pitched, for the same reason. To make up for the lost observations, we went back a full decade to gather more data. This gave us a data set which is both large enough to draw solid conclusions, and in which all the observations are individually large enough to be meaningful.  
 
@@ -82,12 +82,15 @@ lm2 <- lm(Salary ~ Age + Position + AtBats + Runs + Hits + HomeRuns + RBI + Stri
             OnBasePerc + SluggPerc + OnBaseSluggPerc + OnBaseSluggPercNorm + TotalBases + GroundDouble + HitByPitch + SacHit + SacFlies + IntBasesOnBalls, data = baseball)
 ```
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
 #-Step function
 # We seek to find a local AIC min based on our original model and our scope terms
 lm_step_b <- step(lm1, scope=~((. + Caught + BasesWalked +
                                OnBasePerc + SluggPerc + OnBaseSluggPerc + OnBaseSluggPercNorm +
                              TotalBases + GroundDouble + HitByPitch + SacHit + SacFlies + IntBasesOnBalls)^2))
+```
+
+```{r, echo=FALSE, warning=FALSE}
 summary(lm_step_b)
 # From our linear models we choose our variables to use in our clustering
 # We arrive at something like this
@@ -114,7 +117,7 @@ b_scale <- data.frame(scale(b, center = TRUE, scale = TRUE))
 
 After identifying the statistics which have the largest impact on salary, we use the assumption that teams are generally good at paying players what they are worth, to say that the same statistics can identify which players would likely produce similar on-field results. We use K-means to identify the clusters of similar players, but first need to identify how many clusters to use. For this we set   
 
-k E {1, 2, ., 25}  
+>k E {1, 2, ., 25}  
 
 and found the SSE for each value of k, then plotted SSE as a function of k (appendix 1) hoping to find an elbow. Unfortunately, we were not able to identify a clear elbow, so we used our best intuition to select k=25 in order to move forward.  With a k higher than 25, we started running into singleton predictions which seemed problematic. After setting k=25, we found the players in each cluster and proceeded in trying to build a better team. We started with looking at a single individual, A.J. Pollack, and found the cheapest replacement for him. After doing this, we then automated a process so that we could do the same thing for an entire team at once. In this case, we started with the 2018 NL Champion LA Dodgers who were selected because our goal was to build a team which would compete for a post-season appearance. We believe that by starting with the best team in the league, we will be able to identify a solid team, even after allowing for some drop-off of on-field performance. It is worth noting that because we are specifically selecting the lowest paid person from each cluster, we would, by design, have a team which is no more highly paid than the team we started with. Additionally, we built two separate rosters for the Dodgers: one which will replace each player without respect to position, and a second, which requires that each replacement player be of the same position as the player they replaced.  
 
@@ -152,6 +155,9 @@ Kenta Maede | Eric Lauer
 Rich Hill | Anibal Sanchez
 Ross Stripling | John Grant
 Walker Buehler | Derek Rodriguez
+
+Additionally, we found that the Dodgers are overpaying their position players in net but actually have more players underpaid than overpaid. The Dodgers are very close to our expectations in terms of pitcher salaries. The only exception here is Clayton Kershaw who is, according to our models, way overpaid. (Charts for linear model are in appendix 2)
+
 ```{r, include=FALSE, echo=FALSE, warning=FALSE}
 #------------
 # Clustering 
@@ -254,7 +260,9 @@ rmse_forest_b <- sqrt(mean((b_test$Salary - yhat_forest_test)^2))
 
 # Significant drop in RMSE
 matrix( c("Linear", "Tree", rmse_linear_b, rmse_forest_b), nrow = 2, ncol = 2)
+```
 
+```{r, echo=FALSE, include=FALSE, warning=FALSE}
 #---------------------------
 # Look at error terms based on our linear model
 # Colors indicate cluster 
@@ -268,8 +276,9 @@ p1 <- ggplot(data=key_roster, aes(x=Name, y=Error)) +
        x = "Player Name") + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p1
+```
 
-
+```{r, echo=FALSE, warning=FALSE}
 #--------------------------
 # Tree model
 roster_pred <- predict(forest1, key_roster)
@@ -283,7 +292,9 @@ p3 <- ggplot(data=key_roster, aes(x=Name, y=Error)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p3
 
+```
 
+```{r, echo=FALSE, include=FALSE, warning=FALSE}
 #-----------------------------
 # Aggregate Team and Look at Team Errors in our linear model
 league_pred <- predict(lm4, baseball_2018)
@@ -297,7 +308,9 @@ p2 <- ggplot(data=team_error, aes(x=TeamAbbr, y=Error)) +
        x = "Team") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p2
+```
 
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
 #-----------------------------
 # Tree model
 league_pred <- predict(forest1, baseball_2018)
@@ -311,7 +324,9 @@ p4 <- ggplot(data=team_error, aes(x=TeamAbbr, y=Error)) +
        x = "Team") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p4
+```
 
+```{r, include=FALSE, warning=FALSE}
 #----------------------------------------------------------------#
 # Now we look at pitchers
 
@@ -423,7 +438,7 @@ rmse_forest_p
 matrix( c("Linear", "Tree", rmse_linear_p, rmse_forest_p), nrow = 2, ncol = 2)
 ```
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
 # ---------------------------------------------
 # Look at error terms based on our linear model
 roster_pred <- predict(lm6, key_roster)
@@ -436,9 +451,11 @@ p5 <- ggplot(data=key_roster, aes(x=Name, y=Error)) +
        x = "Player Name") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p5
+```
 
+```{r, echo=FALSE, warning=FALSE}
 #--------------------------
-# Look at error terms based on our linear model
+# Look at error terms based on our random forest
 roster_pred <- predict(forest2, key_roster)
 key_roster$Error <- key_roster$Salary - roster_pred
 p7 <- ggplot(data=key_roster, aes(x=Name, y=Error)) +
@@ -454,6 +471,10 @@ p7
 Finally, we see that when we use random forest, many teams overpay position players, however, for pitchers, there is a much more even distribution of payments. (Charts for linear model are in app 2)
 
 ```{r, echo=FALSE, warning=FALSE}
+p4
+```
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
 #-----------------------------
 # Aggregate Team and Look at Team Errors
 league_pred <- predict(lm6, pitchers_2018)
@@ -468,7 +489,9 @@ p6 <- ggplot(data=team_error, aes(x=TeamAbbr, y=Error)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 p6
 
+```
 
+```{r, echo=FALSE, warning=FALSE}
 #-----------------------------
 # Agggregate Team and Look at Team Errors
 league_pred <- predict(forest2, pitchers_2018)
@@ -489,4 +512,29 @@ p8
 We decided to use the random forest model for both position players and pitchers, because their respective RMSE's were roughly one-third for each. For position players, the L.A. Dodgers started with a 2018 salary of $59,884,186. Through our model, they could have reduced their salary to $48,408,726, a savings of more than 11 million dollars, using the random forest model. For the pitchers, the Dodgers started with a 2018 Salary of $65,430,844. Our model suggests they could have reduced their salary to $12,051,606, a savings of more than 53 million dollars.  
 
 Because of the design of our model, we feel as though this would be a strong team for playoff contention. The clustering method that we used was designed to identify players who produce results most similar to those of a given team, in terms of which statistics we determined to be the most predictive for salary based on our linear modelling.  
-Additionally, we determined that many baseball teams tend to overpay for position players, and except for the very top pitchers, teams tended to pay salaries closer to what our model predicts. That is, we are much better at predicting the salaries of pitchers than we are at predicting position player salaries. This is likely a result of our concentration on offensive statistics when predicting salaries for position players. Another possibility for this finding is that there are simply more pitchers on each team, and in the league overall, so the MLB is also more proficient at establishing pitcher salaries than they are position players. 
+
+Additionally, we determined that many baseball teams tend to overpay for position players, and except for the very top pitchers, teams tended to pay salaries closer to what our model predicts. That is, we are much better at predicting the salaries of pitchers than we are at predicting position player salaries. This is likely a result of our concentration on offensive statistics when predicting salaries for position players. Another possibility for this finding is that there are simply more pitchers on each team, and in the league overall, so the MLB is also more proficient at establishing pitcher salaries than they are position players.  
+
+We feel that a very natural extension to this question would deal with the money-making potential of each player. Clearly, baseball teams are not only built to compete for post-season play but are also designed to return some sort of profit to owners, and unfortunately, those profits are not perfectly tied to on-field performance. If we had access to data concerning jersey sales, ticket and concession revenues, and media deals, we could, through various statistical and econometric methods, try to identify individual effects on team revenue.
+
+###VI Appendices
+__Appendix 1.__
+```{r, echo=FALSE, warning=FALSE}
+ k_grid_bat = seq(2, 25, by = 1)
+ N = nrow(b_2018_scale)
+ SSE_grid_bat = foreach(k = k_grid_bat, .combine = 'c') %do% {
+   cluster_kp_bat = kmeanspp(b_2018_scale, k, nstart=25)
+   cluster_kp_bat$tot.withinss
+ }
+ 
+plot(SSE_grid_bat, main="SSE as a Function of K",
+      xlab="# of K", ylab="SSE")
+```
+
+__Appendix 2.__
+```{r, echo=FALSE, warning=FALSE}
+p1
+p2
+p5
+p6
+```
